@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f25234945e7c1041808f1107ce8d4c6, type: 3}
+  m_Name: ChanceCards
+  m_EditorClassIdentifier: 
+  cardDataList:
+  - {fileID: 11400000, guid: beaf816b337f9ee4a84e3a34bbc9c9d5, type: 2}
+  - {fileID: 11400000, guid: 8f5bdcd259f1fc54dba9e4da083e76a6, type: 2}
+  - {fileID: 11400000, guid: 50d7fc5cd219f024e9065c345a64ff6c, type: 2}
+  - {fileID: 11400000, guid: 6083dc67755c3a3448f8a09590ab5f46, type: 2}
+  - {fileID: 11400000, guid: 70324aec733b0cd4dacc7e82a8523845, type: 2}
+  - {fileID: 11400000, guid: 380eb99934eed0040b75e50a5a352365, type: 2}

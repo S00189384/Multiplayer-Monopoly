@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9641173c209a5a4d98cf665774a9347, type: 3}
+  m_Name: Crumlin
+  m_EditorClassIdentifier: 
+  Name: Crumlin
+  tilePrefab: {fileID: 5129007695187572114, guid: 8a6ac145aeffb7441aa8c136c497fc51, type: 3}
+  PurchaseCost: 60
+  MortgageValue: 30
+  HousePurchaseCost: 50
+  HotelPurchaseCost: 50
+  RentDefaultCost: 2
+  RentCostWithHouses: 0a0000001e0000005a000000a0000000
+  RentCostWithHotel: 250
+  PropertyColourSet: {fileID: 11400000, guid: 2b8b659f3555021458a55599df55e29f, type: 2}

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9641173c209a5a4d98cf665774a9347, type: 3}
+  m_Name: Dame Street
+  m_EditorClassIdentifier: 
+  Name: Dame Street
+  tilePrefab: {fileID: 5129007695187572114, guid: 8a6ac145aeffb7441aa8c136c497fc51, type: 3}
+  PurchaseCost: 180
+  MortgageValue: 90
+  HousePurchaseCost: 100
+  HotelPurchaseCost: 100
+  RentDefaultCost: 14
+  RentCostWithHouses: 46000000c800000026020000ee020000
+  RentCostWithHotel: 950
+  PropertyColourSet: {fileID: 11400000, guid: c337e8bfa40bd004ab0fe7be5385e32c, type: 2}

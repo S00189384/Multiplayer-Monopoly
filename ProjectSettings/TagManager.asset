@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - Owned
+  - Unowned
+  - CanConstructBuilding
+  - CanSellBuilding
+  - Mortgageable
+  - Unmortgageable
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Unowned
+    uniqueID: 1288640857
+    locked: 0
+  - name: Unmortgageable
+    uniqueID: 1169501009
+    locked: 0
+  - name: CanvasDuringMortgageSelection
+    uniqueID: 2273080949
+    locked: 0
+  - name: Mortgageable
+    uniqueID: 786092103
+    locked: 0
+  - name: OwnedNoProperty
+    uniqueID: 2465024613
+    locked: 0
+  - name: Owned
+    uniqueID: 3631659013
+    locked: 0
+  - name: CanvasDuringPropertyBuilding
+    uniqueID: 4195182215
+    locked: 0
+  - name: CanConstructBuilding
+    uniqueID: 1557783141
+    locked: 0
+  - name: CanvasDuringPropertyBuildingSelling
+    uniqueID: 1360111553
+    locked: 0
+  - name: CanSellBuilding
+    uniqueID: 3761008423
+    locked: 0
+  - name: Canvas
+    uniqueID: 3126500117
+    locked: 0

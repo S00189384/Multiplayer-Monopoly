@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e944dd353d096e447a1abd86a2190f06, type: 3}
+  m_Name: TileData_WaterWorks
+  m_EditorClassIdentifier: 
+  Name: Water Works
+  tilePrefab: {fileID: 1324774700218116662, guid: 7399b7cf895a43f49a92eaf89e1681c5, type: 3}
+  PurchaseCost: 150
+  MortgageValue: 75
+  SPR_Utility: {fileID: 21300000, guid: 4d1b2e8d5915cec409c4af1a0d5ab0f7, type: 3}

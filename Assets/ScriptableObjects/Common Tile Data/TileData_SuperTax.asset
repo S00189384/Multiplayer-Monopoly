@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06feb9c631953fe4d93ff07252910322, type: 3}
+  m_Name: TileData_SuperTax
+  m_EditorClassIdentifier: 
+  Name: Super Tax
+  tilePrefab: {fileID: 5331228266464264458, guid: a6b6d07269e64bf43b7e60b5ce282f6a, type: 3}
+  AmountToPay: 100

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f25234945e7c1041808f1107ce8d4c6, type: 3}
+  m_Name: CommunityChestCards
+  m_EditorClassIdentifier: 
+  cardDataList:
+  - {fileID: 11400000, guid: 911319a6cff137847b0523fa39f21bbd, type: 2}
+  - {fileID: 11400000, guid: 1d0a6069eca8369469ddbe28221bd7dc, type: 2}
+  - {fileID: 11400000, guid: 8f31602e5b26b4e47812e600fac7164c, type: 2}
+  - {fileID: 11400000, guid: 54a4fcc8c11bac940b2edab1f5dced65, type: 2}
+  - {fileID: 11400000, guid: 857bfdc68bb9fdd41978e168f8b430fd, type: 2}
+  - {fileID: 11400000, guid: efd297d32584f7a43828c1366360c94e, type: 2}
+  - {fileID: 11400000, guid: 4406dae776b443941a2e15003d9c2271, type: 2}
+  - {fileID: 11400000, guid: 4af4b3b2c34883a45b87f15f69218a7a, type: 2}
+  - {fileID: 11400000, guid: 5dca7e66b8216f24681c9066327cf802, type: 2}
+  - {fileID: 11400000, guid: ecdc77346af615743a9fade6ebb46729, type: 2}
+  - {fileID: 11400000, guid: 6e3fc7a8b33b0e9448b2181ca547fd61, type: 2}
+  - {fileID: 11400000, guid: 9a2af81cbd3527048911631dd2a7f05e, type: 2}

@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
+  m_Name: PhotonServerSettings
+  m_EditorClassIdentifier: 
+  AppSettings:
+    AppIdRealtime: 979a7d88-486f-4927-8b07-8e58f9e898b3
+    AppIdFusion: 
+    AppIdChat: 
+    AppIdVoice: 
+    AppVersion: 
+    UseNameServer: 1
+    FixedRegion: 
+    Server: 
+    Port: 0
+    ProxyServer: 
+    Protocol: 0
+    EnableProtocolFallback: 1
+    AuthMode: 0
+    EnableLobbyStatistics: 0
+    NetworkLogging: 1
+  DevRegion: eu
+  PunLogging: 0
+  EnableSupportLogger: 0
+  RunInBackground: 1
+  StartInOfflineMode: 0
+  RpcList:
+  - ClickRpc
+  - DestroyRpc
+  - DestroySpaceship
+  - Fire
+  - RespawnSpaceship
+  - StartGame
+  - LoadScene
+  - Land
+  - Left
+  - SpawnPlayer
+  - OnPlayerSpawned
+  - RecievePlayers
+  - test
+  - TestPlayersRecieving
+  - MoveToNextTurn
+  - ProcessPlayerOnLanding
+  - SubtractFromBalanceRPC
+  - PurchaseRPC
+  - PurchaseTileRPC
+  - SetTileIndexRPC
+  - GiveOwnershipToPlayerRPC
+  - ProcessRentPaymentRPC
+  - AddMoneyToAccountRPC
+  - RemoveMoneyFromAccountRPC
+  - GainPropertyRPC
+  - GainStationRPC
+  - GainUtilityRPC
+  - MoveToNextTurnRPC
+  - RemovePlayerRPC
+  - FixPositionOfAuctionPrompt
+  - FixDisplayOfAuctionPrompt
+  - InitialiseAuctionPrompt
+  - PlayerBiddedAtAuctionRPC
+  - ReportPlayerBidRPC
+  - ReportPlayerFoldRPC
+  - OnPlayerBiddedAtAuctionRPC
+  - OnPlayerFoldedFromAuctionRPC
+  - ReportPlayerWinRPC
+  - ProcessPlayerTilePurchaseRPC
+  - ShowNotification
+  - ShowPlayerPurchaseNotificationMessage
+  - ProcessPlayerRemovingTileRPC
+  - RemovePlayerOwnershipRPC
+  - RemoteSetHotelBuilt
+  - RemoteSetHouseBuildCount
+  - RemoveHotelRPC
+  - RemoveHouseRPC
+  - SpawnHotelRPC
+  - SpawnHouseRPC
+  - RemoteSetNumConstructedBuildings
+  - MortgageTileRPC
+  - UnmortgageTileRPC
+  - OnPlayerDisplaySpawned
+  - OnCardSpawned
+  - ShowCommunityChestCard
+  - ShowChanceCard
+  - InitialiseCardQueue
+  - MakePlayerPaymentExchangeRPC
+  - MakePlayerPaymentExchange
+  - RemoteReceiveGetOutOfJailFreeCard
+  - RemoteRemoveGetOutOfJailFreeCard
+  - JailPlayerRemote
+  - RemovePlayerFromJailRemote
+  - ShowSingleDiceThrowRemoteClients
+  - StartDiceThrowSequenceRPC
+  - StartDiceThrowSequenceRemoteClients
+  - UpdateDisplayRemote
+  - ShowSingleDiceThrowToRemoteClients
+  - ShowDoubleDiceThrowToRemoteClients
+  - ChangeBalanceRemote
+  - AddToBalanceRemoteClients
+  - SubtractFromBalanceRemoteClients
+  - ShowCommunityChestCardRPC
+  - ShowChanceCardRPC
+  - ChangeToMortgagedRemoteClients
+  - ChangeToUnmortgagedRemoteClients
+  - SetBalanceRemoteClients
+  - ChangeDisplayToBankruptRPC
+  - OnPromptSpawned
+  - RemoveTurnRemoteClients
+  DisableAutoOpenWizard: 1
+  ShowSettings: 0
+  DevRegionSetOnce: 1
