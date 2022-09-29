@@ -9,7 +9,7 @@ public class AuctionTurnManager : MonoBehaviourPun
 {
     private TurnManager<string> auctionTurns;
 
-    public static event Action<string> NewPlayerAuctionTurnEvent;
+    public static event Action<string,int> NewPlayerAuctionTurnEvent;
     public static event Action<string,int> PlayerWonAuctionEvent;
 
     private int currentAuctionBid;
@@ -27,14 +27,20 @@ public class AuctionTurnManager : MonoBehaviourPun
         auctionTurns = new TurnManager<string>();
         auctionTurns.Initialise(GameManager.Instance.ActivePlayersIDList);
 
-        NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn);
+        NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn,currentAuctionBid);
     }
 
 
     private void OnPlayerBiddedAtAuction(string playerID, int bidAmount)
     {
-        currentAuctionBid = bidAmount;
+        photonView.RPC(nameof(SetCurrentAuctionBidRPC), RpcTarget.All, bidAmount);
         MoveToNextTurn();
+    }
+
+    [PunRPC]
+    private void SetCurrentAuctionBidRPC(int currentAuctionBid)
+    {
+        this.currentAuctionBid = currentAuctionBid;
     }
 
     public void MoveToNextTurn() 
@@ -46,7 +52,7 @@ public class AuctionTurnManager : MonoBehaviourPun
     private void MoveToNextTurnRPC()
     {
         auctionTurns.MoveToNextTurn();
-        NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn);
+        NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn, currentAuctionBid);
     }
 
     public void RemovePlayer(string playerID)

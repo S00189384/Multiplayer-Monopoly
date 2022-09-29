@@ -1,18 +1,12 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: Diasallow player to click on button if they dont own a tile?
 
 public class BTN_TileMortgagerSelection : BTN_Base, IOnEventCallback
 {
     [SerializeField] private UI_TileMortgageSelection uiTileMortgagerSelection;
-
-    //private bool canUseMortgagerSelection;
 
     public override void Awake()
     {

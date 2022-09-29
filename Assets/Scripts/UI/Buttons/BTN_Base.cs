@@ -32,6 +32,9 @@ public class BTN_Base : MonoBehaviour
 
     public void SetButtonText(string text)
     {
+        if(tmp_buttonText == null)
+            tmp_buttonText = GetComponentInChildren<TextMeshProUGUI>();
+
         tmp_buttonText.text = text;
     }
 }

@@ -40,7 +40,7 @@ public class PlayerMoneyAccount : MonoBehaviourPun
     {
         if(Input.GetKeyDown(KeyCode.P) && photonView.IsMine)
         {
-            SetBalance(1);
+            SetBalance(0);
         }
     }
 

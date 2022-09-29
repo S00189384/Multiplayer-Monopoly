@@ -22,14 +22,6 @@ public class UI_NotificationManager : MonoBehaviourPun
             Instance = this;
     }
 
-    //private void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        ShowNotification("Player 1's turn");
-    //    }
-    //}
-
     public void RPC_ShowNotification(string message,RpcTarget rpcTarget)
     {
         photonView.RPC(nameof(ShowNotification), rpcTarget, message);

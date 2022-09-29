@@ -59,7 +59,7 @@ public class UI_AuctionTurnDisplayManager : MonoBehaviourPun
         BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent -= OnPlayerFoldedFromAuction;
     }
 
-    private void OnNewPlayerAuctionTurn(string newPlayerTurn)
+    private void OnNewPlayerAuctionTurn(string newPlayerTurn,int currentBid)
     {
         if (!string.IsNullOrEmpty(previousPlayerTurn))
             SpawnedPlayerTurnIconsDictionary[previousPlayerTurn].ChangeOutlineColour(Color.white);

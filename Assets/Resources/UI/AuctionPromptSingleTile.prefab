@@ -2157,7 +2157,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 9092857053363052571}
         m_TargetAssemblyTypeName: UI_AuctionBidSlider, Assembly-CSharp
-        m_MethodName: OnBidSliderValueChanged
+        m_MethodName: UpdateSliderValueText
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2339,7 +2339,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 124.8, y: 68.5}
+  m_SizeDelta: {x: 155, y: 68.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &698693432809226760
 CanvasRenderer:
@@ -2474,7 +2474,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 124.8, y: 68.5}
+  m_SizeDelta: {x: 155, y: 68.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8790889447346804373
 CanvasRenderer:

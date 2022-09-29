@@ -68,7 +68,9 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
         sequence.append(() =>
         {
             MoveAuctionPanelOffScreen();
-            Bank.Instance.ProcessPlayerTilePurchase(playerIDThatWonAuction, photonIDOfTileForAuction, finalBid);
+
+            if(playerIDThatWonAuction == PhotonNetwork.LocalPlayer.UserId)
+                Bank.Instance.ProcessPlayerTilePurchase(playerIDThatWonAuction, photonIDOfTileForAuction, finalBid);
         });
     }
 

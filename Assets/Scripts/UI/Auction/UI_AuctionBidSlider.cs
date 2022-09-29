@@ -21,11 +21,18 @@ public class UI_AuctionBidSlider : MonoBehaviourPun
 
     //Start.
     private void Awake() => BTN_AuctionBid.PlayerBiddedAtAuction += OnPlayerBiddedAtAuction;
-    private void Start() => bidSlider.minValue = GameDataSlinger.MIN_AUCTION_BET;
-
+    private void Start()
+    {
+        SetMinSliderValue(GameDataSlinger.MIN_AUCTION_BET);
+        SetMaxSliderValue(Bank.Instance.GetLocalPlayerMoneyAccount.Balance);
+        UpdateSliderValueText(GameDataSlinger.MIN_AUCTION_BET);
+    }
 
     private void OnPlayerBiddedAtAuction(string playerID, int bidAmount)
     {
+        if (bidAmount >= bidSlider.maxValue)
+            bidSlider.gameObject.SetActive(false);
+
         photonView.RPC(nameof(OnPlayerBiddedAtAuctionRPC), RpcTarget.All, bidAmount);
     }
 
@@ -33,14 +40,23 @@ public class UI_AuctionBidSlider : MonoBehaviourPun
     private void OnPlayerBiddedAtAuctionRPC(int bidAmount)
     {
         SetMinSliderValue(bidAmount + GameDataSlinger.MIN_AUCTION_BET_ADDITION);
-        SetSliderValue(bidAmount + GameDataSlinger.MIN_AUCTION_BET_ADDITION);
+        SetSliderValue(bidAmount + GameDataSlinger.MIN_AUCTION_BET_ADDITION);       
     }
 
-    public void SetMaxSliderValue(int value) => bidSlider.maxValue = value;
-    public void SetMinSliderValue(int value) => bidSlider.minValue = value;
-    public void SetSliderValue(int value) => bidSlider.value = value;
+    public void SetMaxSliderValue(int value)
+    {
+        bidSlider.maxValue = value;
+        TMP_MaxBidValue.text = $"${(int)value}";
+    }
 
-    public void OnBidSliderValueChanged(float newValue)
+    public void SetMinSliderValue(int value) => bidSlider.minValue = value;
+    public void SetSliderValue(int value)
+    {
+        bidSlider.value = value;
+        UpdateSliderValueText(value);
+    }
+
+    public void UpdateSliderValueText(float newValue)
     {
         TMP_CurrentBidValue.text = $"${(int)newValue}";
     }
