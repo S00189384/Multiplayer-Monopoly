@@ -64,14 +64,17 @@ public abstract class TileInstance_Purchasable : TileInstance
         if (playerID == PhotonNetwork.LocalPlayer.UserId)
             gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.mortgageableLayerName);
 
-        photonView.RPC(nameof(GiveOwnershipToPlayerRPC), RpcTarget.All, playerID);
+        OwnerID = playerID;
+        NewOwnerEvent?.Invoke(OwnerID);
+
+        //photonView.RPC(nameof(GiveOwnershipToPlayerForOtherClients), RpcTarget.Others, playerID);
     }
 
     [PunRPC]
-    public void GiveOwnershipToPlayerRPC(string playerID)
+    public void GiveOwnershipToPlayerForOtherClients(string playerID)
     {
         OwnerID = playerID;
-        NewOwnerEvent?.Invoke(OwnerID);
+        //NewOwnerEvent?.Invoke(OwnerID);
     }
 
     public void RemovePlayerOwnership()

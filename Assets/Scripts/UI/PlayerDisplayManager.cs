@@ -71,11 +71,10 @@ public class PlayerDisplayManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         UI_PlayerDisplay spawnedPlayerDisplay = PhotonNetwork.GetPhotonView(viewIDOfSpawnedDisplay).gameObject.GetComponent<UI_PlayerDisplay>();
         FixDisplayOfSpawnedPlayerDisplay(spawnedPlayerDisplay.transform);
-        spawnedPlayerDisplay.UpdateDisplay(playerName, $"${GameDataSlinger.PLAYER_STARTING_MONEY.ToString()}", null);
+        spawnedPlayerDisplay.UpdateDisplay(playerName, $"${GameDataSlinger.PLAYER_STARTING_MONEY.ToString()}", GameManager.Instance.GetPlayerSprite(playerID));
         spawnedPlayerDisplayDict.Add(playerID, spawnedPlayerDisplay);
 
         GameManager.Instance.GetPlayerPieceByID(playerID).GetComponent<PlayerMoneyAccount>().BalanceChangedEvent += spawnedPlayerDisplay.ChangeBalance;
-        //Bank.Instance.GetPlayerMoneyAccountByID(playerID).BalanceChangedEvent += spawnedPlayerDisplay.ChangeBalance;
     }
 
     private void FixDisplayOfSpawnedPlayerDisplay(Transform spawnedDisplayTransform)

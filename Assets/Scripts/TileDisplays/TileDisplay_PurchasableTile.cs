@@ -18,6 +18,8 @@ public abstract class TileDisplay_PurchasableTile : TileDisplay
     [SerializeField] protected TextMeshPro TMP_MortgagedInfo;
     [SerializeField] protected TextMeshPro TMP_TileNameMortgaged;
 
+    [SerializeField] protected SpriteRenderer SPR_OwnerIcon;
+
     public override void Awake()
     {
         base.Awake();
@@ -31,6 +33,18 @@ public abstract class TileDisplay_PurchasableTile : TileDisplay
             ChangeSortingLayerName("Owned");
 
         //Change owned display to player icon.
+        ChangeOwnerSprite(playerID);
+    }
+
+    //private void ChangeOwnerSpriteForAllClients(string playerID)
+    //{
+    //    photonView.RPC(nameof(ChangeOwnerSprite), RpcTarget.All, playerID);
+    //}
+
+    //[PunRPC]
+    public void ChangeOwnerSprite(string playerID)
+    {
+        SPR_OwnerIcon.sprite = GameManager.Instance.GetPlayerSprite(playerID);
     }
 
     public abstract void ChangeToMortgaged(TileInstance_Purchasable purchasableTileInstance);

@@ -36,13 +36,5 @@ public class UI_LandedOnUnownedPropertyPrompt : UI_LandedOnUnownedTilePrompt
     {
         UI_NotificationManager.Instance.RPC_ShowNotification($"{GameManager.Instance.GetPlayerNicknameFromID(playerIDOfLandedPlayer)} purchased {propertyTileLandedOn.propertyData.Name} for ${propertyTileLandedOn.PurchaseCost}", RpcTarget.All);
         Bank.Instance.ProcessPlayerTilePurchase(playerIDOfLandedPlayer, propertyTileLandedOn.photonView.ViewID, propertyTileLandedOn.PurchaseCost);
-        Destroy(gameObject);
     }
-
-    //public void PurchaseMyProperty()
-    //{
-    //    //UI_NotificationManager.Instance.RPC_ShowNotification($"{GameManager.Instance.GetPlayerNicknameFromID(playerIDOfLandedPlayer)} purchased {propertyTileLandedOn.propertyData.Name} for ${propertyTileLandedOn.PurchaseCost}",RpcTarget.All);
-    //    //Bank.Instance.ProcessPlayerTilePurchase(playerIDOfLandedPlayer, propertyTileLandedOn.photonView.ViewID, propertyTileLandedOn.PurchaseCost);
-    //    //Destroy(gameObject);
-    //}
 }

@@ -164,6 +164,7 @@ MonoBehaviour:
   ownedPropertiesList: []
   ownedStationsList: []
   ownedUtilitiesList: []
+  ownedTilesPhotonIDList: 
   AllOwnedPropertiesTypeList: []
   propertyTypeOwnedCountDictionary:
     keys: []

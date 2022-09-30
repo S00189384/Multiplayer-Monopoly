@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     //public List<string> BankruptPlayersIDList = new List<string>();
     public List<string> DisconnectedPlayersIDList = new List<string>();
 
+    [SerializeField] private Sprite[] playerSprites;
+    [SerializeField] private Dictionary<string, Sprite> playerSpriteDictionary = new Dictionary<string, Sprite>();
+    public Sprite GetPlayerSprite(string playerID) => playerSpriteDictionary[playerID];
 
     public List<string> GetActivePlayersIgnoringID(string playerIDToIgnore)
     {
@@ -145,6 +148,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             PlayersPieceDictionary.Add(players[i].UserId, spawnedPlayerPiece);
 
             ActivePlayersIDList.Add(players[i].UserId);
+            playerSpriteDictionary.Add(players[i].UserId, playerSprites[i]);
         }
 
         AllPlayersSpawnedEvent?.Invoke();
