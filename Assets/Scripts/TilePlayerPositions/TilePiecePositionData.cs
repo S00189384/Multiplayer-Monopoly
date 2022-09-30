@@ -1,12 +1,11 @@
-using System;
-using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using TMPro;
 
-//Make better system for holding player available positions. Atm it's just a queue which alternates the indexes of the available positions.
+//Attached to each tile, this script handles the positions that players stay in when landing on a tile.
+//When landing on a tile, this script marks the position the player lands in as being "unavailable" by adding it to an "unavailable" positions queue.
+//When leaving a tile, the script removes this unavailable position from the queue and adds it to the stack of available positions a player can use to stay in on this tile.
+//The current position for a player to be in on a tile is the first element at the top of the available positions stack.
 
 public class TilePiecePositionData : MonoBehaviourPun
 {
@@ -19,60 +18,30 @@ public class TilePiecePositionData : MonoBehaviourPun
     {
         for (int i = 0; i < playerMoveToTransforms.Count; i++)
         {
-            //unavailablePlayerPositionIndexesQueue.Enqueue(i);
             availablePlayerPositionIndexesStack.Push(i);
         }
-    }
-
-    private void Start()
-    {
-        //if(tmpro_Debugger != null)
-        //{
-        //    for (int i = 0; i < availablePlayerPositionIndexesQueue.Count; i++)
-        //    {
-        //        tmpro_Debugger.text += availablePlayerPositionIndexesQueue.ElementAt(i) + " - ";
-        //    }
-        //}
     }
 
     //Notify all clients that a player landed - therefore update its position queue for other players to land.
     public void OnPlayerLanded()
     {
-        //playerPiece.transform.position = CurrentPlayerMoveToPosition;
-        photonView.RPC("Land", RpcTarget.All);
+        photonView.RPC(nameof(Land), RpcTarget.All);
     }
-
-
-    //public void PlayerLanded()
-    //{
-    //    if(photonView.IsMine)
-    //        photonView.RPC("Land", RpcTarget.All);
-    //}
 
     public void PlayerLeft()
     {
-        photonView.RPC("Left", RpcTarget.All);
+        photonView.RPC(nameof(Left), RpcTarget.All);
     }
 
     [PunRPC]
-    public void Left()
+    private void Left()
     {
-        //availablePlayerPositionIndexesQueue.Enqueue(availablePlayerPositionIndexesQueue.Dequeue());
         availablePlayerPositionIndexesStack.Push(unavailablePlayerPositionIndexesQueue.Dequeue());
     }
 
     [PunRPC]
-    public void Land()
+    private void Land()
     {
-        //playerPiece.transform.position = CurrentPlayerMoveToPosition;
-
-        // availablePlayerPositionIndexesQueue.Enqueue(availablePlayerPositionIndexesQueue.Dequeue());
-
-        //print($"moved piece to {CurrentPlayerMoveToPosition}");
         unavailablePlayerPositionIndexesQueue.Enqueue(availablePlayerPositionIndexesStack.Pop());
-        //print($"new target transform is now {CurrentPlayerMoveToPosition}");
-
-        //if (tmpro_Debugger != null)
-        //    tmpro_Debugger.text = GetQueueString();
     }
 }

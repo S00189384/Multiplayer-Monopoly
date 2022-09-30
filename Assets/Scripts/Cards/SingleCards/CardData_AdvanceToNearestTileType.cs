@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+//Not used in project yet.
+
 [CreateAssetMenu(fileName = "AdvanceToNearestTileType", menuName = "CardData/AdvanceToNearestTileType")]
 public class CardData_AdvanceToNearestTileType : CardData
 {

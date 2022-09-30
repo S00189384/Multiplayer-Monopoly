@@ -1,25 +1,25 @@
 using Photon.Pun;
 using Photon.Realtime;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
+//Bank is responsible for holding players money accounts.
+//Bank processes payments between players and between players and the bank.
+//Bank also can process a tile purchase.
+//When a tile is purchased, the bank notifies tileownershipmanager to also process the tile purchase.
 
 public class Bank : MonoBehaviourPun
 {
     public static Bank Instance;
 
+    //Player account management.
     private Dictionary<string, PlayerMoneyAccount> playerMoneyAccountDictionary = new Dictionary<string, PlayerMoneyAccount>();
-    //public Dictionary<string, PlayerMoneyAccount> PlayerMoneyAccountDictionary => playerMoneyAccountDictionary;
     public PlayerMoneyAccount GetPlayerMoneyAccountByID(string playerID) => playerMoneyAccountDictionary[playerID];
     public PlayerMoneyAccount GetLocalPlayerMoneyAccount => playerMoneyAccountDictionary[PhotonNetwork.LocalPlayer.UserId];
 
+    //Events.
     public static event Action<PlayerPaymentExchange> PlayerPaymentExchangeEvent; //Make not local.
     public static event Action<string, string, int> RentPaymentMadeBetweenPlayersEvent;
-
-    //public static event Action<string, int> MoneyAddedToAccountEvent;
-    //public static event Action<string, int> MoneyRemovedFromAccountEvent;
-
     public static event Action<string> BankruptedPlayerEvent;
 
     private void Awake()
@@ -41,14 +41,12 @@ public class Bank : MonoBehaviourPun
         }
     }
 
-    //All.
+    //Tile purchasing.
     public void ProcessPlayerTilePurchase(PlayerMoneyAccount playerMoneyAccount, TileInstance_Purchasable purchasableTile)
     {
         RemoveMoneyFromAccount(playerMoneyAccount.PlayerID, purchasableTile.PurchaseCost);
         TileOwnershipManager.Instance.ProcessPlayerTilePurchase(playerMoneyAccount.PlayerID, purchasableTile.photonView.ViewID);
     }
-
-    //Called from auction.
     public void ProcessPlayerTilePurchase(string playerID, int tilePhotonID,int tilePurchaseCost)
     {
         PlayerMoneyAccount playerMoneyAccount = playerMoneyAccountDictionary[playerID];
@@ -56,21 +54,7 @@ public class Bank : MonoBehaviourPun
         TileOwnershipManager.Instance.ProcessPlayerTilePurchase(playerID, tilePhotonID);
     }
 
-    public void BankruptPlayer(string playerID)
-    {
-        //Remove account?
-        //Tile ownership manager - what to do?
-        print("Bank bankrupted player");
-
-        BankruptedPlayerEvent?.Invoke(playerID);
-    }
-
-
-    private void OnPlayerEnteredBankruptsy(PlayerMoneyAccount playerMoneyAccount)
-    {
-        
-    }
-
+    //Adding money to player accounts.
     public void AddMoneyToAccount(string playerID,int amount)
     {
         GetPlayerMoneyAccountByID(playerID).AddToBalance(amount);
@@ -80,6 +64,7 @@ public class Bank : MonoBehaviourPun
         GetLocalPlayerMoneyAccount.AddToBalance(amount);
     }
 
+    //Removing money from player accounts.
     public void RemoveMoneyFromAccount(string playerID,int amount)
     {
         GetPlayerMoneyAccountByID(playerID).SubtractFromBalance(amount);
@@ -89,8 +74,15 @@ public class Bank : MonoBehaviourPun
         GetLocalPlayerMoneyAccount.SubtractFromBalance(amount);
     }
 
+    //Bankrupcy.
+    public void BankruptPlayer(string playerID)
+    {
+        //Remove account?
+        //Tile ownership manager - what to do?
+        BankruptedPlayerEvent?.Invoke(playerID);
+    }
 
-    //All.
+    //Rent between players.
     public void ProcessRentPayment(string playerIDOfRentPayer,string playerIDOfRentReciever,int rentCost)
     {
         RentPaymentMadeBetweenPlayersEvent?.Invoke(playerIDOfRentPayer, playerIDOfRentReciever, rentCost);
@@ -102,36 +94,17 @@ public class Bank : MonoBehaviourPun
         rentPayerName = GameManager.Instance.GetPlayerNicknameFromID(playerIDOfRentPayer);
         rentRecieverName = GameManager.Instance.GetPlayerNicknameFromID(playerIDOfRentReciever);
 
-        print($"{rentPayerName} paid {rentRecieverName} ${rentCost} in rent.");
         UI_NotificationManager.Instance.RPC_ShowNotification($"{rentPayerName} paid {rentRecieverName} ${rentCost} in rent.",RpcTarget.All);
 
         MakePlayerPaymentExchange(accountOfRentPayer, accountOfRentReciever, rentCost);
-
-        // photonView.RPC(nameof(ProcessRentPaymentRPC), RpcTarget.All, playerIDOfRentPayer, playerIDOfRentReciever, rentCost);
     }
 
-    [PunRPC]
-    private void ProcessRentPaymentRPC(string playerIDOfRentPayer, string playerIDOfRentReciever, int rentCost)
-    {
-        PlayerMoneyAccount accountOfRentPayer = playerMoneyAccountDictionary[playerIDOfRentPayer];
-        PlayerMoneyAccount accountOfRentReciever = playerMoneyAccountDictionary[playerIDOfRentReciever];
-
-        string rentPayerName, rentRecieverName;
-        rentPayerName = GameManager.Instance.GetPlayerIdentityDisplay(playerIDOfRentPayer);
-        rentRecieverName = GameManager.Instance.GetPlayerIdentityDisplay(playerIDOfRentReciever);
-
-        print($"{rentPayerName} paid {rentRecieverName} ${rentCost} in rent.");
-        UI_NotificationManager.Instance.ShowNotification($"{rentPayerName} paid {rentRecieverName} ${rentCost} in rent.");
-
-        MakePlayerPaymentExchange(accountOfRentPayer, accountOfRentReciever, rentCost);
-    }
-
+    //Payment exchange between players.
     public void MakePlayerPaymentExchangeRPC(string playerIDFrom, string playerIDTo, int amount,RpcTarget rpcTarget)
     {
         photonView.RPC(nameof(MakePlayerPaymentExchange), rpcTarget, playerIDFrom, playerIDTo, amount);
     }
 
-    //Local.
     [PunRPC]
     public void MakePlayerPaymentExchange(string playerIDFrom, string playerIDTo, int amount)
     {
@@ -150,7 +123,6 @@ public class Bank : MonoBehaviourPun
         PlayerPaymentExchangeEvent?.Invoke(paymentExchange);
 
         print($"Player payment exchange of ${amount} made between {GameManager.Instance.GetPlayerNicknameFromID(playerFrom.PlayerID)} and {GameManager.Instance.GetPlayerNicknameFromID(playerTo.PlayerID)}.");
-
     }
 
     private void OnDestroy()

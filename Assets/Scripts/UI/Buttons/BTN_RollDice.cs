@@ -1,15 +1,15 @@
-using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Button for rolling a dice to move forward on the board.
+//Calls on ui dice throw manager to show the result of the dice throw to the player. 
 
 public class BTN_RollDice : BTN_Base
 {
     [SerializeField] private UI_DiceThrowManager diceThrowManager;
 
-    private string playerTurn;
     public static int DiceRollValue;
 
+    //Testing - for making player go to a tile.
     [SerializeField] private int diceRollValue;
 
     public override void Awake()
@@ -22,8 +22,8 @@ public class BTN_RollDice : BTN_Base
     {
         SetButtonInteractable(false);
 
-        int randomDiceValue = diceThrowManager.GetRandomDiceValue();
-        //int randomDiceValue = diceRollValue;
+        //int randomDiceValue = diceThrowManager.GetRandomDiceValue();
+        int randomDiceValue = diceRollValue;
         DiceRollValue = randomDiceValue;
         diceThrowManager.ShowSingleDiceThrow(randomDiceValue, playerName: GameManager.Instance.LocalPlayerNickname, callback: () => PieceMover.Instance.MoveLocalPlayerPieceForwardOverTime(randomDiceValue));
     }

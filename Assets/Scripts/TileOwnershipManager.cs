@@ -15,7 +15,6 @@ public class TileOwnershipManager : MonoBehaviourPun
 
     //Each players owned tile trackers.
     private Dictionary<string, OwnedPlayerTileTracker> PlayersOwnedTileTrackerDictionary = new Dictionary<string, OwnedPlayerTileTracker>();
-    public List<OwnedPlayerTileTracker> DebugList = new List<OwnedPlayerTileTracker>();
     public OwnedPlayerTileTracker GetOwnedPlayerTileTracker(string playerID) => PlayersOwnedTileTrackerDictionary[playerID];
     public OwnedPlayerTileTracker GetLocalPlayersOwnedTileTracker { get { return PlayersOwnedTileTrackerDictionary[PhotonNetwork.LocalPlayer.UserId]; } }
 
@@ -46,6 +45,7 @@ public class TileOwnershipManager : MonoBehaviourPun
 
         GameManager.AllPlayersSpawnedEvent += OnAllPlayersSpawned;
     }
+
     private void Start()
     {
         for (int i = 0; i < board.boardTiles.Count; i++)
@@ -79,7 +79,6 @@ public class TileOwnershipManager : MonoBehaviourPun
         for (int i = 0; i < players.Length; i++)
         {
             PlayersOwnedTileTrackerDictionary.Add(players[i].UserId, GameManager.Instance.GetPlayerPieceByID(players[i].UserId).GetComponent<OwnedPlayerTileTracker>());
-            DebugList.Add(GameManager.Instance.GetPlayerPieceByID(players[i].UserId).GetComponent<OwnedPlayerTileTracker>());
         }
     }
 
@@ -154,23 +153,81 @@ public class TileOwnershipManager : MonoBehaviourPun
     private void ProcessPlayerPropertyRemoval(string playerID, TileInstance_Property propertyTile)
     {
         OwnedPlayerTileTracker playerOwnedTileTracker = PlayersOwnedTileTrackerDictionary[playerID];
-        playerOwnedTileTracker.RemoveProperty(propertyTile);
-        propertyTile.RemovePlayerOwnership();
 
         PropertyColourSet colourOfProperty = propertyTile.propertyData.PropertyColourSet;
-
         if (PlayerOwnsAllOfPropertyType(playerOwnedTileTracker, colourOfProperty))
         {
             playerOwnedTileTracker.RemoveFromAllOwnedPropertyOfTypeList(colourOfProperty);
         }
+
+        playerOwnedTileTracker.RemoveProperty(propertyTile);
+        propertyTile.RemovePlayerOwnership();
+    }
+    private void ProcessPlayerStationRemoval(string playerID, TileInstance_Station stationTile)
+    {
+        OwnedPlayerTileTracker playerOwnedTileTracker = PlayersOwnedTileTrackerDictionary[playerID];
+        playerOwnedTileTracker.RemoveStation(stationTile);
+        stationTile.RemovePlayerOwnership();
+    }
+    private void ProcessPlayerUtilityRemoval(string playerID, TileInstance_Utility utilityTile)
+    {
+        OwnedPlayerTileTracker playerOwnedTileTracker = PlayersOwnedTileTrackerDictionary[playerID];
+        playerOwnedTileTracker.RemoveUtility(utilityTile);
+        utilityTile.RemovePlayerOwnership();
     }
 
-    //Not tested.
-    //public bool PlayerOwnsAllOfPropertyColour(string playerID, PropertyColourSet propertyColour)
-    //{
-    //    int numOwnedPropertiesOfThatColour = PlayersOwnedTileTrackerDictionary[playerID].ownedPropertiesList.Count(prop => prop.propertyData.PropertyColourSet == propertyColour);
-    //    return board.propertyTypeInstanceCountDictionary[propertyColour] == numOwnedPropertiesOfThatColour;
-    //}
+
+    //Transfering all owned tiles to between players.
+    public void TransferAllPlayerOwnedTilesToAnotherPlayer(string playerIDOfGiver, string playerIDOfReceiver,bool removeGiverFromMemory)
+    {
+        photonView.RPC(nameof(TransferAllPlayerOwnedTilesToAnotherPlayerRPC), RpcTarget.All, playerIDOfGiver, playerIDOfReceiver, removeGiverFromMemory);    
+    }
+
+    [PunRPC]
+    private void TransferAllPlayerOwnedTilesToAnotherPlayerRPC(string playerIDOfGiver, string playerIDOfReceiver, bool removeGiverFromMemory)
+    {
+        OwnedPlayerTileTracker ownedTileTrackerOfGiver = PlayersOwnedTileTrackerDictionary[playerIDOfGiver];
+
+        //Player does not own any tiles - nothing to give to the other player.
+        if (ownedTileTrackerOfGiver.OwnsAPurchasableTile == false)
+        {
+            if (removeGiverFromMemory)
+                PlayersOwnedTileTrackerDictionary.Remove(playerIDOfGiver);
+
+            return;
+        }
+
+        if (ownedTileTrackerOfGiver.OwnsAProperty)
+        {
+            for (int i = ownedTileTrackerOfGiver.ownedPropertiesList.Count - 1; i >= 0; i--)
+            {
+                ProcessPlayerPropertyPurchase(playerIDOfReceiver, ownedTileTrackerOfGiver.ownedPropertiesList[i]);
+                ProcessPlayerPropertyRemoval(playerIDOfGiver, ownedTileTrackerOfGiver.ownedPropertiesList[i]);
+            }
+        }
+
+        if (ownedTileTrackerOfGiver.OwnsAStation)
+        {
+            for (int i = ownedTileTrackerOfGiver.ownedStationsList.Count - 1; i >= 0; i--)
+            {
+                ProcessPlayerStationPurchase(playerIDOfReceiver, ownedTileTrackerOfGiver.ownedStationsList[i]);
+                ProcessPlayerStationRemoval(playerIDOfGiver, ownedTileTrackerOfGiver.ownedStationsList[i]);
+            }
+        }
+
+        if (ownedTileTrackerOfGiver.OwnsAUtility)
+        {
+            for (int i = ownedTileTrackerOfGiver.ownedUtilitiesList.Count - 1; i >= 0; i--)
+            {
+                ProcessPlayerUtilityPurchase(playerIDOfReceiver, ownedTileTrackerOfGiver.ownedUtilitiesList[i]);
+                ProcessPlayerUtilityRemoval(playerIDOfGiver, ownedTileTrackerOfGiver.ownedUtilitiesList[i]);
+            }
+        }         
+
+        if (removeGiverFromMemory)
+            PlayersOwnedTileTrackerDictionary.Remove(playerIDOfGiver);
+    }
+
 
     private void OnDestroy()
     {

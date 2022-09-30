@@ -1,19 +1,16 @@
-using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Script which processes the player on a tile that they land on.
+//When a player moves - a player move event is triggered and this script listens for this.
+//When a player has finished their move this script calls on the tile that they landed on to process the player.
+
 public class TileInstanceManager : MonoBehaviour
 {
-    public static TileInstanceManager Instance;
-
     [SerializeField] private List<iPlayerProcessable> playerProcessableList = new List<iPlayerProcessable>();
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-
         PieceMover.PlayerMovedEvent += OnPlayerFinishedMove;
     }
 
@@ -21,6 +18,7 @@ public class TileInstanceManager : MonoBehaviour
     {
         Board gameBoard = FindObjectOfType<Board>();
 
+        //For each tile on the board - if the tile can process the player, keep track of the tile.
         for (int i = 0; i < gameBoard.boardTiles.Count; i++)
         {
             iPlayerProcessable iPlayerProcessable;

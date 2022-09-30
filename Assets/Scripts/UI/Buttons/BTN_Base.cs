@@ -2,6 +2,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Base custom button script.
+//Allows you to change the text of the button.
+
 [RequireComponent(typeof(Button))]
 public class BTN_Base : MonoBehaviour
 {

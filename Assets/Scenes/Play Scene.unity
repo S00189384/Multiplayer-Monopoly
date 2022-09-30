@@ -26419,7 +26419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceThrowManager: {fileID: 1814171162}
-  diceRollValue: 30
+  diceRollValue: 2
 --- !u!1 &1028452921
 GameObject:
   m_ObjectHideFlags: 0
@@ -47074,6 +47074,8 @@ MonoBehaviour:
   timeToFadeBackground: 0.6
   timeToMoveUIElements: 0.7
   timeToLeaveCardOnScreen: 2.7
+  delayAfterMovingHeaderOnScreen: 0.9
+  tweenType: 16
   communityChestCardsPile: {fileID: 1220598599}
   chanceCardsPile: {fileID: 1495595492}
 --- !u!114 &1873080358

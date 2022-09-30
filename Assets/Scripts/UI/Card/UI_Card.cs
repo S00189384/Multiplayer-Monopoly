@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+//Script attached to a chance / community chest card to be shown to the player.
 
 public class UI_Card : MonoBehaviour
 {

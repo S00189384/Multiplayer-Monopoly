@@ -35,7 +35,7 @@ public class UI_LandedOnUnownedUtilityPrompt : UI_LandedOnUnownedTilePrompt
     public override void PurchaseMyTile()
     {
         UI_NotificationManager.Instance.RPC_ShowNotification($"{GameManager.Instance.GetPlayerNicknameFromID(playerIDOfLandedPlayer)} purchased {utilityTileLandedOn.tileDataUtility.Name} for ${utilityTileLandedOn.PurchaseCost}", RpcTarget.All);
-        TileOwnershipManager.Instance.ProcessPlayerUtilityPurchase(playerIDOfLandedPlayer, utilityTileLandedOn);
+        Bank.Instance.ProcessPlayerTilePurchase(playerIDOfLandedPlayer, utilityTileLandedOn.photonView.ViewID, utilityTileLandedOn.PurchaseCost);
     }
 
     //public void OnPurchaseTileButtonClicked()

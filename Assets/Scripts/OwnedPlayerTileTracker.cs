@@ -13,6 +13,8 @@ public class OwnedPlayerTileTracker : MonoBehaviourPun
     [SerializeField] public List<TileInstance_Station> ownedStationsList = new List<TileInstance_Station>();
     [SerializeField] public List<TileInstance_Utility> ownedUtilitiesList = new List<TileInstance_Utility>();
 
+    public List<int> ownedTilesPhotonIDList = new List<int>();
+
     //List of property types that the player currently owns all properties of.
     public List<PropertyColourSet> AllOwnedPropertiesTypeList = new List<PropertyColourSet>();
     public bool OwnsAllOfAPropertyType { get { return AllOwnedPropertiesTypeList.Count > 0; } }
@@ -72,16 +74,16 @@ public class OwnedPlayerTileTracker : MonoBehaviourPun
     //    } 
     //}
 
-    public event Action<TileInstance_Purchasable> GainedTileEvent;
-    public event Action<TileInstance_Purchasable> LostTileEvent;
+    //public event Action<TileInstance_Purchasable> GainedTileEvent;
+    //public event Action<TileInstance_Purchasable> LostTileEvent;
 
     //public event Action Gained
 
     public event Action<PropertyColourSet,List<TileInstance_Property>> OwnsAllOfPropertyTypeEvent;
     public event Action<PropertyColourSet, List<TileInstance_Property>> NoLongerOwnsAllOfAnyPropertyTypeEvent;
 
-    public event Action GainedAbilityToMortgageATileEvent;
-    public event Action LostAbilityToMortgageATileEvent;
+    //public event Action GainedAbilityToMortgageATileEvent;
+    //public event Action LostAbilityToMortgageATileEvent;
 
     //Dictionary to keep track of the number of owned properties this player owns of a certain type. Key - property type Value - int (no. of properties of that type owned).
     [SerializeField] private PropertyTypeOwnerDictionary propertyTypeOwnedCountDictionary = new PropertyTypeOwnerDictionary();
@@ -90,7 +92,7 @@ public class OwnedPlayerTileTracker : MonoBehaviourPun
     public void GainProperty(TileInstance_Property propertyInstance)
     {
         ownedPropertiesList.Add(propertyInstance);
-        GainedTileEvent?.Invoke(propertyInstance);
+        //GainedTileEvent?.Invoke(propertyInstance);
 
         PropertyColourSet colourSetOfProperty = propertyInstance.propertyData.PropertyColourSet;
 
@@ -112,14 +114,14 @@ public class OwnedPlayerTileTracker : MonoBehaviourPun
     {
         ownedStationsList.Add(stationInstance);
 
-        GainedTileEvent?.Invoke(stationInstance);
+        //GainedTileEvent?.Invoke(stationInstance);
         //int photonViewIDOfStation = stationInstance.photonView.ViewID;
         //photonView.RPC(nameof(GainStationRPC), RpcTarget.All, photonViewIDOfStation);
     }
     public void GainUtility(TileInstance_Utility utilityInstance)
     {
         ownedUtilitiesList.Add(utilityInstance);
-        GainedTileEvent?.Invoke(utilityInstance);
+        //GainedTileEvent?.Invoke(utilityInstance);
         //int photonViewIDOfUtility = utilityInstance.photonView.ViewID;
         //photonView.RPC(nameof(GainUtilityRPC), RpcTarget.All, photonViewIDOfUtility);
     }

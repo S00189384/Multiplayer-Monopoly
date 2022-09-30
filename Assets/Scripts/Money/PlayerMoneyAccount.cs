@@ -1,8 +1,10 @@
 using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Bank account that is attached to each player.
+//Money can be added and removed from account.
+//If players balance drops below 0, they enter bankrupcy and need to resolve this to continue to play.
 
 public class PlayerMoneyAccount : MonoBehaviourPun
 {
@@ -32,17 +34,19 @@ public class PlayerMoneyAccount : MonoBehaviourPun
         } 
     }
 
+    //Events.
     public event Action<PlayerMoneyAccount> EnteredBankruptsyEvent;
     public event Action<PlayerMoneyAccount> LeftBankruptsyEvent;
     public event Action<int> BalanceChangedEvent;
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.P) && photonView.IsMine)
-        {
-            SetBalance(0);
-        }
-    }
+    //Testing.
+    //private void Update()
+    //{
+    //    if(Input.GetKeyDown(KeyCode.P) && photonView.IsMine)
+    //    {
+    //        SetBalance(0);
+    //    }
+    //}
 
 
     public void InitialiseAccount(string playerID)
@@ -52,7 +56,7 @@ public class PlayerMoneyAccount : MonoBehaviourPun
     }
     public int GetBalanceWithPurchase(int purchaseCost) => Balance - purchaseCost;
     public int GetBalanceWithMoneyGain(int gainAmount) => Balance + gainAmount;
-    public bool WouldGoBankruptWithPurchase(int purchaseCost) => Balance - purchaseCost < 0;
+    public bool CanAffordPurchase(int purchaseCost) => (Balance - purchaseCost) > 0;
 
     public void AddToBalance(int amount)
     {
@@ -89,6 +93,4 @@ public class PlayerMoneyAccount : MonoBehaviourPun
     {
         Balance = amount;
     }
-
-    public bool CanAffordPurchase(int purchaseCost) => (Balance - purchaseCost) > 0;
 }

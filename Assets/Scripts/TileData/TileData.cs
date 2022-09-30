@@ -1,6 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Scriptable object which holds the data for a tile.
+//This data can then be used by a tile instance and tile display.
 
 [CreateAssetMenu(fileName = "TileData", menuName = "TileData")]
 public abstract class TileData : ScriptableObject

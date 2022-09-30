@@ -1,8 +1,8 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+
+//Base script for a tiles appearance on the board.
 
 public abstract class TileDisplay : MonoBehaviourPun
 {
@@ -15,21 +15,7 @@ public abstract class TileDisplay : MonoBehaviourPun
     public virtual void Awake()
     {
         sortingGroup = GetComponent<SortingGroup>();
-
-        //spriteRenderer = GetComponent<SpriteRenderer>();
-        //originalColour = spriteRenderer.color;
     }
 
     public void ChangeSortingLayerName(string name) => sortingGroup.sortingLayerName = name;
-
-    //public virtual void ChangeToGrey()
-    //{
-    //    spriteRenderer.color = greyColour;
-    //}
-    //public virtual void ChangeColourToOriginal()
-    //{
-    //    spriteRenderer.color = originalColour;
-    //}
-
-    //public abstract void ProcessPlayer();
 }

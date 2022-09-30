@@ -1,10 +1,9 @@
-using ExitGames.Client.Photon;
-using Photon.Pun;
-using Photon.Realtime;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
+//Class for managing turns. 
+//Used in player turn manager and auction turn manager class.
+//Uses a linked list + liked list node to keep track of a collection of turns and what is the current turn.
 
 public class TurnManager<T> 
 {

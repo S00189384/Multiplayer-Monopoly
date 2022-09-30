@@ -1,10 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
+//Tile instance for a station tile.
+//Rent is calculated by multiplying the default rent cost by a multiplier using the number of stations that the owner owns on the board.
 
 public class TileInstance_Station : TileInstance_Purchasable, iTileDataRecievable, iPlayerProcessable
 {
+    //Data for this tile.
     public TileData_Station tileDataStation;
     public override TileData_Purchasable GetPurchasableData => tileDataStation;
 
@@ -27,8 +28,6 @@ public class TileInstance_Station : TileInstance_Purchasable, iTileDataRecievabl
 
     public void ProcessPlayer(string playerID)
     {
-        print("Station processed player");
-
         if (!IsOwned)
         {
             PlayerLandedOnUnownedStationEvent?.Invoke(playerID, this);
@@ -43,15 +42,8 @@ public class TileInstance_Station : TileInstance_Purchasable, iTileDataRecievabl
         }
     }
 
-    public override void MortgageTile()
-    {
-        base.MortgageTile();
-    }
-
-    public override void UnmortgageTile()
-    {
-        base.UnmortgageTile();
-    }
+    public override void MortgageTile() => base.MortgageTile();
+    public override void UnmortgageTile() => base.UnmortgageTile();
 
     public void RecieveTileData(TileData tileData)
     {

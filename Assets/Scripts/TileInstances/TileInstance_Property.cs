@@ -1,24 +1,16 @@
-using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Tile instance for a property tile.
 
 public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievable,iPlayerProcessable
 {
-    [Header("Property Info")]
+    [Header("Property Data")]
     public TileData_Property propertyData;
     public override TileData_Purchasable GetPurchasableData => propertyData;
 
-    private PropertyTileBuildingConstructor propertyBuildingConstructor;
-
+    [Header("Current rent")]
     [SerializeField] public int CurrentRentRequired;
-
-    public static event Action<string,TileInstance_Property> PlayerLandedOnUnownedPropertyEvent;
-    public event Action<TileInstance_Property> BuiltHouseEvent;
-    public event Action<TileInstance_Property> BuiltHotelEvent;
-    public event Action<TileInstance_Property> SoldHouseEvent;
-    public event Action<TileInstance_Property> SoldHotelEvent;
 
     public override bool CanBeMortgagedd => base.CanBeMortgagedd && propertyBuildingConstructor.PropertyContainsAnyBuildings;
     public int NumConstructedBuildings { get { return propertyBuildingConstructor.NumConstructedBuildings;} }
@@ -27,7 +19,17 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
     public bool HotelBuilt { get { return propertyBuildingConstructor.HotelOnProperty; } }
     public bool HouseBuilt { get { return propertyBuildingConstructor.HouseOnProperty; } }
 
+    //Script which constructs buildings on this property.
+    private PropertyTileBuildingConstructor propertyBuildingConstructor;
 
+    //Events.
+    public static event Action<string,TileInstance_Property> PlayerLandedOnUnownedPropertyEvent;
+    public event Action<TileInstance_Property> BuiltHouseEvent;
+    public event Action<TileInstance_Property> BuiltHotelEvent;
+    public event Action<TileInstance_Property> SoldHouseEvent;
+    public event Action<TileInstance_Property> SoldHotelEvent;
+
+    //Start.
     public override void Awake()
     {
         base.Awake();
@@ -40,15 +42,8 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
         PurchaseCost = propertyData.PurchaseCost;
     }
 
-    public override void MortgageTile()
-    {
-        base.MortgageTile();
-    }
-
-    public override void UnmortgageTile()
-    {
-        base.UnmortgageTile();
-    }
+    public override void MortgageTile() => base.MortgageTile();
+    public override void UnmortgageTile() => base.UnmortgageTile();
 
     public void ConstructBuilding()
     {
@@ -109,14 +104,12 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
     {
         if (!IsOwned)
         {
-            //RaisePlayerLandedOnUnownedPurchasableTileEvent(playerID, photonView.ViewID);
             PlayerLandedOnUnownedPropertyEvent?.Invoke(playerID,this);
         }
         else
         {
             if (!PlayerLandedIsOwner(playerID) && !IsMortgaged)
             {
-                //Pay rent.
                 Bank.Instance.ProcessRentPayment(playerID, OwnerID, CurrentRentRequired);
             }
         }

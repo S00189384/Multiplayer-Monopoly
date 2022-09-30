@@ -1,3 +1,6 @@
+//Tile instance for the start tile.
+//Listens for a player move passed go event and adds money to the players account.
+
 public class TileInstance_Start : TileInstance, iPlayerProcessable
 {
     private void Awake()

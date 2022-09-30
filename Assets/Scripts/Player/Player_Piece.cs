@@ -1,8 +1,8 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Player piece script which holds the tile index that the player is currently on.
 
 public class Player_Piece : MonoBehaviourPun, IPunObservable
 {

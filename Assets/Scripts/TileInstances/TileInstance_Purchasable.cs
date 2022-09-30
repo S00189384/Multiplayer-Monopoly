@@ -1,8 +1,9 @@
 using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Tile instance script for a purchasable tile - properties, utilities and stations.
+//A purchasable tile can be mortgaged / unmortgaged and owned by a player.
 
 [RequireComponent(typeof(Collider))]
 public abstract class TileInstance_Purchasable : TileInstance
@@ -14,49 +15,22 @@ public abstract class TileInstance_Purchasable : TileInstance
     public string OwnerID;
     public bool IsMortgaged;
 
-    //[SerializeField] private bool canBeMortgaged;
-    //public bool CanBeMortgaged 
-    //{ 
-    //    get => canBeMortgaged;
-    //    set 
-    //    {
-    //        canBeMortgaged = value;
-    //        if (canBeMortgaged)
-    //            BecameMortgageableEvent?.Invoke();
-    //        else
-    //            BecameUnmortgageableEvent?.Invoke();
-    //    }
-    //}
-
     public virtual bool CanBeMortgagedd { get { return IsOwned; } }
-
     public bool IsOwned { get { return OwnerID != string.Empty && OwnerID != null; } }
     protected bool PlayerLandedIsOwner(string playerIDLanded) => playerIDLanded == OwnerID;
 
-    //public static event Action<string, int> PlayerLandedOnUnownedPurchasableTileEvent;
+    //Events.
     public event Action<string> NewOwnerEvent;
-
     public event Action<TileInstance_Purchasable> MortgagedEvent;
     public event Action<TileInstance_Purchasable> UnmortgagedEvent;
 
-    public event Action BecameMortgageableEvent;
-    public event Action BecameUnmortgageableEvent;
-
-    //protected void RaisePlayerLandedOnUnownedPurchasableTileEvent(string playerIDLanded,int photonViewID)
-    //{
-    //    PlayerLandedOnUnownedPurchasableTileEvent?.Invoke(playerIDLanded, photonViewID);
-    //}
-
+    //Start.
     public virtual void Awake()
     {
         gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.unownedLayerMaskName);
     }
 
-    private void Start()
-    {
-        
-    }
-
+    //Mortgaging / Unmortgaging.
     public virtual void MortgageTile()
     {
         Bank.Instance.AddMoneyToAccount(OwnerID, GetPurchasableData.MortgageValue);
@@ -83,10 +57,12 @@ public abstract class TileInstance_Purchasable : TileInstance
         IsMortgaged = false;
     }
 
+    //Ownership.
     public void GiveOwnershipToPlayer(string playerID)
     {
-        if(playerID == PhotonNetwork.LocalPlayer.UserId)
-            gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.mortgageableLayerName); // Change layer mask for client that owns property only.
+        // Change layer mask for client that owns property only.
+        if (playerID == PhotonNetwork.LocalPlayer.UserId)
+            gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.mortgageableLayerName);
 
         photonView.RPC(nameof(GiveOwnershipToPlayerRPC), RpcTarget.All, playerID);
     }

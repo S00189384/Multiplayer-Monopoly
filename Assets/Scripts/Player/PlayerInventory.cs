@@ -1,7 +1,5 @@
 using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //Called inventory but only holds any get out of jail free cards the player has.
@@ -11,22 +9,22 @@ public class PlayerInventory : MonoBehaviourPun
 {
     [SerializeField] private int numGetOutOfJailFreeCards;
 
-    public static event Action PlayerReceivedGetOutOfJailFreeCard;
-    public static event Action PlayerUsedGetOutOfJailFreeCard;
-    public static event Action PlayerNoLongerOwnsGetOfJailFreeCard;
-
     public bool HasAGetOutOfJailFreeCard { get { return numGetOutOfJailFreeCards > 0; } }
     public bool HasMaxNumberOfGetOutOfJailFreeCards { get { return numGetOutOfJailFreeCards >= GameDataSlinger.MAX_NUM_GET_OUT_OF_JAIL_FREE_CARDS_PLAYER_INVENTORY; } }
     public int NumGetOutOfJailFreeCards => numGetOutOfJailFreeCards;
 
+    public static event Action PlayerReceivedGetOutOfJailFreeCard;
+    public static event Action PlayerUsedGetOutOfJailFreeCard;
+    public static event Action PlayerNoLongerOwnsGetOfJailFreeCard;
 
-    private void Update()
-    {
-        if(photonView.IsMine && Input.GetKeyDown(KeyCode.Q))
-        {
-            ReceiveGetOutOfJailFreeCard();
-        }
-    }
+    //TESTING.
+    //private void Update()
+    //{
+    //    if(photonView.IsMine && Input.GetKeyDown(KeyCode.Q))
+    //    {
+    //        ReceiveGetOutOfJailFreeCard();
+    //    }
+    //}
 
     public void ReceiveGetOutOfJailFreeCard()
     {

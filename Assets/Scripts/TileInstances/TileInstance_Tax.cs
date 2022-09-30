@@ -1,7 +1,8 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Tile instance for tax.
+//Player that lands has to pay tax amount to the bank.
 
 public class TileInstance_Tax : TileInstance, iTileDataRecievable,iPlayerProcessable
 {

@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-//TODO: What if you want to change the number of houses that can be built on a property? C
 
 [CreateAssetMenu(fileName = "PropertyData", menuName = "PropertyData")]
 public class TileData_Property : TileData_Purchasable

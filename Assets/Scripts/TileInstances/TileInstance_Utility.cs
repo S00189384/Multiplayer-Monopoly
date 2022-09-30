@@ -1,43 +1,34 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
+//Utility tile instance that is active / spawned on the board.
 
 public class TileInstance_Utility : TileInstance_Purchasable, iTileDataRecievable, iPlayerProcessable
 {
+    //Data for this tile.
     public TileData_Utility tileDataUtility;
     public override TileData_Purchasable GetPurchasableData => tileDataUtility;
 
+    //Events.
+    public static event Action<string, TileInstance_Utility> PlayerLandedOnUnownedUtilityEvent;
 
+    //Utility rent is the number of owned utilities of the owner multiplied by the dice roll value.
     public int CurrentRentCost 
     { 
         get 
         {
             int numOwnedUtilitiesOfOwner = TileOwnershipManager.Instance.GetOwnedPlayerTileTracker(OwnerID).OwnedUtilitiesCount;
-            return BTN_RollDice.DiceRollValue * GameDataSlinger.UTILITY_RENT_DICE_MULTIPLIERS[numOwnedUtilitiesOfOwner];
+            return BTN_RollDice.DiceRollValue * GameDataSlinger.UTILITY_RENT_DICE_MULTIPLIERS[numOwnedUtilitiesOfOwner - 1];
         } 
     }
 
-    public static event Action<string, TileInstance_Utility> PlayerLandedOnUnownedUtilityEvent;
+    //Start.
+    private void Start() => PurchaseCost = tileDataUtility.PurchaseCost;
 
-    private void Start()
-    {
-        PurchaseCost = tileDataUtility.PurchaseCost;
-    }
-
-    public override void MortgageTile()
-    {
-        base.MortgageTile();
-    }
-
-    public override void UnmortgageTile()
-    {
-        base.UnmortgageTile();
-    }
+    public override void MortgageTile() => base.MortgageTile();
+    public override void UnmortgageTile() => base.UnmortgageTile();
 
     public void ProcessPlayer(string playerID)
     {
-        print("Utility processed player ");
         if (!IsOwned)
         {
             PlayerLandedOnUnownedUtilityEvent?.Invoke(playerID, this);
@@ -50,7 +41,6 @@ public class TileInstance_Utility : TileInstance_Purchasable, iTileDataRecievabl
                 Bank.Instance.ProcessRentPayment(playerID, OwnerID, CurrentRentCost);
             }
         }
-
     }
 
     public void RecieveTileData(TileData tileData)

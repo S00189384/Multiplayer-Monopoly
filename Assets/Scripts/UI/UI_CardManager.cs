@@ -1,13 +1,14 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+//Script which listens for a player landing on a chance or community chest tile.
+//UI is then spawned for each client which shows them the card that the player has received.
+//The card is then executed on the client who landed on the tile.
+
 public class UI_CardManager : MonoBehaviourPun
 {
-    public static UI_CardManager Instance;
-
+    [Header("Prefab paths for UI Cards")]
     private const string communityChestPrefabResourcePath = "UI/Cards/UI_CommunityChestCard";
     private const string chancePrefabResourcePath = "UI/Cards/UI_ChanceCard";
 
@@ -26,6 +27,8 @@ public class UI_CardManager : MonoBehaviourPun
     [SerializeField] private float timeToFadeBackground = 0.6f;
     [SerializeField] private float timeToMoveUIElements = 0.7f;
     [SerializeField] private float timeToLeaveCardOnScreen = 2.7f;
+    [SerializeField] private float delayAfterMovingHeaderOnScreen = 0.9f;
+    [SerializeField] private LeanTweenType tweenType;
 
     private GameObject spawnedCard;
     private CardData cardDataToExecute;
@@ -34,31 +37,19 @@ public class UI_CardManager : MonoBehaviourPun
     [SerializeField] private CardPile communityChestCardsPile;
     [SerializeField] private CardPile chanceCardsPile;
 
+    //Start.
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
+        TileInstance_Chance.PlayerLandedOnChanceCardEvent += ShowChanceCardToAllClients;
+        TileInstance_CommunityChest.PlayerLandedOnCommunityChestEvent += ShowCommunityChestCardToAllClients;
     }
-
     private void Start()
     {
         headerOffScreenPosition = TMP_Header.transform.position;
     }
 
-    ////Testing.
-    //private void Update()
-    //{
-    //    //if (PhotonNetwork.IsMasterClient)
-    //    //{
-    //    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    //    {
-    //    //        photonView.RPC(nameof(ShowCommunityChestCard), RpcTarget.All, PhotonNetwork.MasterClient.UserId);
-    //    //        //ShowCommunityChestCard(PhotonNetwork.MasterClient.UserId);
-    //    //    }
-    //    //}
-    //}
-
-    public void ShowCommunityChestCard(string playerID)
+    //Community chest card.
+    private void ShowCommunityChestCardToAllClients(string playerID)
     {
         photonView.RPC(nameof(ShowCommunityChestCardRPC), RpcTarget.All, playerID);
     }
@@ -81,7 +72,8 @@ public class UI_CardManager : MonoBehaviourPun
         }
     }
 
-    public void ShowChanceCard(string playerID)
+    //Chance card.
+    private void ShowChanceCardToAllClients(string playerID)
     {
         photonView.RPC(nameof(ShowChanceCardRPC), RpcTarget.All, playerID);
     }
@@ -119,14 +111,14 @@ public class UI_CardManager : MonoBehaviourPun
     {
         LTSeq sequence = LeanTween.sequence();
         sequence.append(LeanTween.alphaCanvas(CG_Background, 1f, timeToFadeBackground));
-        sequence.append(LeanTween.move(TMP_Header.gameObject, headerTargetTransform.position, timeToMoveUIElements).setEase(LeanTweenType.easeInOutSine));
-        sequence.append(0.9f);
-        sequence.append(LeanTween.move(spawnedCard, cardTargetTransform.position, timeToMoveUIElements).setEase(LeanTweenType.easeInOutSine));
+        sequence.append(LeanTween.move(TMP_Header.gameObject, headerTargetTransform.position, timeToMoveUIElements).setEase(tweenType));
+        sequence.append(delayAfterMovingHeaderOnScreen);
+        sequence.append(LeanTween.move(spawnedCard, cardTargetTransform.position, timeToMoveUIElements).setEase(tweenType));
         sequence.append(timeToLeaveCardOnScreen);
         sequence.append(() =>
         {
-            LeanTween.move(TMP_Header.gameObject, headerOffScreenPosition, timeToMoveUIElements).setEase(LeanTweenType.easeInOutSine);
-            LeanTween.move(spawnedCard, cardSpawnTransform.position, timeToMoveUIElements).setEase(LeanTweenType.easeInOutSine);
+            LeanTween.move(TMP_Header.gameObject, headerOffScreenPosition, timeToMoveUIElements).setEase(tweenType);
+            LeanTween.move(spawnedCard, cardSpawnTransform.position, timeToMoveUIElements).setEase(tweenType);
             LeanTween.alphaCanvas(CG_Background, 0, timeToFadeBackground).setOnComplete(OnFinishedShowingCardSequence);
         });
     }
@@ -146,5 +138,11 @@ public class UI_CardManager : MonoBehaviourPun
         spawnedCardTransform.SetParent(this.transform);
         spawnedCardTransform.localEulerAngles = Vector3.zero;
         spawnedCardTransform.localScale = Vector3.one;
+    }
+
+    private void OnDestroy()
+    {
+        TileInstance_Chance.PlayerLandedOnChanceCardEvent -= ShowChanceCardToAllClients;
+        TileInstance_CommunityChest.PlayerLandedOnCommunityChestEvent -= ShowCommunityChestCardToAllClients;
     }
 }

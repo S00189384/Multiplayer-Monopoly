@@ -62,6 +62,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         PlayerTurnManager.OneRemainingPlayerEvent += OnOneRemainingPlayerLeftActiveInGame;
     }
 
+    private void Update()
+    {
+        if(photonView.IsMine)
+        {
+            if(Input.GetKeyDown(KeyCode.L))
+            {
+                TileOwnershipManager.Instance.TransferAllPlayerOwnedTilesToAnotherPlayer(PhotonNetwork.LocalPlayer.UserId, ActivePlayersIDList[1],true);
+            }
+        }
+    }
+
     private void OnOneRemainingPlayerLeftActiveInGame(string playerIDThatWonGame, List<string> remainingPlayerIDList)
     {
         //RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };

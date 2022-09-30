@@ -1,8 +1,8 @@
 using Photon.Pun;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//A tile instance is a spawned tile that is on the board and processes players as they land on them.
+//A tile instance uses tile data to receive the values of its tile such as rent cost etc. 
 
 public abstract class TileInstance : MonoBehaviourPun
 {

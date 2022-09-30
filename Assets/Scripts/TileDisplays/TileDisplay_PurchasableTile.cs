@@ -1,8 +1,11 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+//Script which handles the appearance of a purchasable tile.
+//If the player mortgages / unmortgages the purchasable tile, the tile changes its appearance for all clients to show this.
+//When this tile gets a new owner, the sorting layer is changed for the purpose of being highlighted when the player activates the UI for mortgaging / unmortgaging this tile.
+//On getting a new owner, an icon is displayed above the tile to show the players who the owner is of that tile.
 
 public abstract class TileDisplay_PurchasableTile : TileDisplay
 {
