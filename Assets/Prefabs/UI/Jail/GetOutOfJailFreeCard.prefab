@@ -86,8 +86,7 @@ GameObject:
   - component: {fileID: 5967087027154779385}
   - component: {fileID: 5967087027154779391}
   - component: {fileID: 5967087027154779390}
-  - component: {fileID: -3022204460634494030}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: GetOutOfJailFreeCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,17 +151,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!210 &-3022204460634494030
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5967087027154779384}
-  m_Enabled: 1
-  m_SortingLayerID: -533958873
-  m_SortingLayer: 10
-  m_SortingOrder: 0
 --- !u!1 &5967087028046353130
 GameObject:
   m_ObjectHideFlags: 0

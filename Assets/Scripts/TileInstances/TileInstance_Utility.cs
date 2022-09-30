@@ -18,7 +18,6 @@ public class TileInstance_Utility : TileInstance_Purchasable, iTileDataRecievabl
         } 
     }
 
-
     public static event Action<string, TileInstance_Utility> PlayerLandedOnUnownedUtilityEvent;
 
     private void Start()

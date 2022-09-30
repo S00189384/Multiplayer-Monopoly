@@ -73,28 +73,22 @@ public class Bank : MonoBehaviourPun
 
     public void AddMoneyToAccount(string playerID,int amount)
     {
-        // MoneyAddedToAccountEvent?.Invoke(playerID, amount);
         GetPlayerMoneyAccountByID(playerID).AddToBalance(amount);
-
-        //photonView.RPC(nameof(AddMoneyToAccountRPC), RpcTarget.All, playerID, amount);
     }
-    [PunRPC]
-    private void AddMoneyToAccountRPC(string playerID, int amount)
+    public void AddMoneyToLocalPlayerAccount(int amount)
     {
-        GetPlayerMoneyAccountByID(playerID).AddToBalance(amount);
+        GetLocalPlayerMoneyAccount.AddToBalance(amount);
     }
+
     public void RemoveMoneyFromAccount(string playerID,int amount)
     {
-        //MoneyRemovedFromAccountEvent?.Invoke(playerID, amount);
         GetPlayerMoneyAccountByID(playerID).SubtractFromBalance(amount);
-        //photonView.RPC(nameof(RemoveMoneyFromAccountRPC), RpcTarget.All, playerID, amount);
+    }
+    public void RemoveMoneyFromLocalPlayerAccount(int amount)
+    {
+        GetLocalPlayerMoneyAccount.SubtractFromBalance(amount);
     }
 
-    [PunRPC]
-    private void RemoveMoneyFromAccountRPC(string playerID, int amount)
-    {
-        GetPlayerMoneyAccountByID(playerID).SubtractFromBalance(amount);
-    }
 
     //All.
     public void ProcessRentPayment(string playerIDOfRentPayer,string playerIDOfRentReciever,int rentCost)

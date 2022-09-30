@@ -21308,10 +21308,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db99bb40d777cd4f8823341ca812146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverPromptPrefab: {fileID: -1057395363429378343, guid: bdb5e2bbf819a634dac7c94445d5a8d5, type: 3}
   GO_UI: {fileID: 1275788276}
   CG_Background: {fileID: 1451601952}
   T_PromptSpawnTransform: {fileID: 1539575640}
+  gameOverPromptPrefab: {fileID: -1057395363429378343, guid: bdb5e2bbf819a634dac7c94445d5a8d5, type: 3}
+  timeToTransition: 0.45
+  tweenType: 16
 --- !u!1 &820926123
 GameObject:
   m_ObjectHideFlags: 0
@@ -26417,7 +26419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceThrowManager: {fileID: 1814171162}
-  diceRollValue: 1
+  diceRollValue: 30
 --- !u!1 &1028452921
 GameObject:
   m_ObjectHideFlags: 0
@@ -36631,7 +36633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 0.69803923}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.69803923}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -43240,10 +43242,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6ea8ded2545f044fbb7446f4d2f05da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UI_diceThrowManager: {fileID: 1814171162}
   jailOptionsPanelPrefab: {fileID: 5867623995109757597, guid: 3cac3bdda5600cf449db82534f44ca3f, type: 3}
   CG_Background: {fileID: 1516793671}
   T_panelSpawnTransform: {fileID: 586132379}
+  UI_diceThrowManager: {fileID: 1814171162}
+  remainingTurnsInJail: 0
 --- !u!1 &1681773441
 GameObject:
   m_ObjectHideFlags: 0
@@ -46066,6 +46069,10 @@ MonoBehaviour:
   doubleDiceThrowPanel: {fileID: 772930644450518676}
   T_DicePanelSpawn: {fileID: 1080497489}
   CG_Background: {fileID: 1695587096}
+  timeToTransitionUIElements: 0.5
+  timeToLeaveSingleDiceThrowOnScreen: 1.1
+  timeToLeaveDoubleDiceThrowOnScreen: 1.85
+  tweenType: 16
 --- !u!114 &1814171163
 MonoBehaviour:
   m_ObjectHideFlags: 0

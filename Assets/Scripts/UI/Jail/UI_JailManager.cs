@@ -8,22 +8,33 @@ using UnityEngine;
 
 public class UI_JailManager : MonoBehaviour,IOnEventCallback
 {
-    [SerializeField] private UI_DiceThrowManager UI_diceThrowManager;
-    private PlayerInventory localPlayerInventory;
-
+    [Header("In jail UI options Prefab")]
     [SerializeField] private UI_InJailOptionsPanel jailOptionsPanelPrefab;
-    [SerializeField] private CanvasGroup CG_Background;
+    private GameObject GO_spawnedJailPanel;
 
+    [Header("UI Components")]
+    [SerializeField] private CanvasGroup CG_Background;
     [SerializeField] private Transform T_panelSpawnTransform;
 
-    private int remainingTurnsInJail = GameDataSlinger.MAX_ROLL_DOUBLE_ATTEMPTS_TO_LEAVE_JAIL;
+    [Header("UI Script for showing dice throws while in jail")]
+    [SerializeField] private UI_DiceThrowManager UI_diceThrowManager;
 
-    private GameObject GO_spawnedJailPanel;
+    //For accessing players get out of jail free cards if any.
+    private PlayerInventory localPlayerInventory;
+
+    //How many turns does the player have left to stay in jail.
+    [SerializeField] private int remainingTurnsInJail;
+    private void ResetRemainingTurnsInJail() => remainingTurnsInJail = GameDataSlinger.MAX_ROLL_DOUBLE_ATTEMPTS_TO_LEAVE_JAIL;
 
     private void Awake()
     {
         GameManager.AllPlayersSpawnedEvent += OnAllPlayersSpawned;
-        PhotonNetwork.AddCallbackTarget(this);
+        Jailor.LocalPlayerJailedEvent += OnLocalPlayerJailed;
+        Jailor.LocalPlayerLeftJailEvent += OnLocalPlayerLeftJail;
+    }
+    private void Start()
+    {
+        ResetRemainingTurnsInJail();
     }
 
     private void OnAllPlayersSpawned()
@@ -62,14 +73,14 @@ public class UI_JailManager : MonoBehaviour,IOnEventCallback
         string notificationMessage = $"{playerName} paid ${GameDataSlinger.LEAVE_JAIL_FEE_COST} to leave jail.";
 
         Jailor.Instance.RemovePlayerFromJail(PhotonNetwork.LocalPlayer.UserId);
-
-        Player_Piece localPlayerPiece = GameManager.Instance.GetLocalPlayerPiece();
+        ResetRemainingTurnsInJail();
+        Bank.Instance.RemoveMoneyFromLocalPlayerAccount(GameDataSlinger.LEAVE_JAIL_FEE_COST);
 
         HidePanel(callbackOnEnd: () =>
         UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback(notificationMessage, callback: () =>
         {
-            int randomDiceThrow = UI_diceThrowManager.GiveRandomDiceValue();
-            UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow,playerName,() => PieceMover.Instance.MovePieceForwardOverTime(localPlayerPiece,randomDiceThrow));         
+            int randomDiceThrow = UI_diceThrowManager.GetRandomDiceValue();
+            UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow,playerName,() => PieceMover.Instance.MoveLocalPlayerPieceForwardOverTime(randomDiceThrow));         
         })); 
     }
 
@@ -78,24 +89,19 @@ public class UI_JailManager : MonoBehaviour,IOnEventCallback
         string playerName = GameManager.Instance.GetPlayerNicknameFromID(PhotonNetwork.LocalPlayer.UserId);
 
         int firstDiceValue, secondDiceValue;
-        firstDiceValue = UI_diceThrowManager.GiveRandomDiceValue();
-        secondDiceValue = UI_diceThrowManager.GiveRandomDiceValue();
+        firstDiceValue = UI_diceThrowManager.GetRandomDiceValue();
+        secondDiceValue = UI_diceThrowManager.GetRandomDiceValue();
 
         HidePanel(callbackOnEnd: () => UI_diceThrowManager.ShowDoubleDiceThrowAttempt(firstDiceValue,secondDiceValue, playerName, callback: () => 
         {
             if(firstDiceValue == secondDiceValue)
             {
                 Jailor.Instance.RemovePlayerFromJail(PhotonNetwork.LocalPlayer.UserId);
+                ResetRemainingTurnsInJail();
 
-                Player_Piece localPlayerPiece = GameManager.Instance.GetLocalPlayerPiece();
-                int randomDiceThrow = UI_diceThrowManager.GiveRandomDiceValue();
-                UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow, playerName, () => PieceMover.Instance.MovePieceForwardOverTime(localPlayerPiece, randomDiceThrow));
+                int randomDiceThrow = UI_diceThrowManager.GetRandomDiceValue();
+                UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow, playerName, () => PieceMover.Instance.MoveLocalPlayerPieceForwardOverTime(randomDiceThrow));
             }
-            else
-            {
-                
-            }
-
         }));
     }
 
@@ -106,17 +112,19 @@ public class UI_JailManager : MonoBehaviour,IOnEventCallback
 
         localPlayerInventory.UseGetOutOfJailFreeCard();
         Jailor.Instance.RemovePlayerFromJail(PhotonNetwork.LocalPlayer.UserId);
-
-        Player_Piece localPlayerPiece = GameManager.Instance.GetLocalPlayerPiece();
+        ResetRemainingTurnsInJail();
 
         HidePanel(callbackOnEnd: () =>
         UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback(notificationMessage, callback: () =>
         {
-            int randomDiceThrow = UI_diceThrowManager.GiveRandomDiceValue();
-            UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow, playerName, () => PieceMover.Instance.MovePieceForwardOverTime(localPlayerPiece, randomDiceThrow));
+            int randomDiceThrow = UI_diceThrowManager.GetRandomDiceValue();
+            UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow, playerName,callback: () => PieceMover.Instance.MoveLocalPlayerPieceForwardOverTime(randomDiceThrow));
         }));
     }
 
+    //When this clients player is jailed, listen for their turn and process them being in jail.
+    private void OnLocalPlayerJailed() => PhotonNetwork.AddCallbackTarget(this);
+    private void OnLocalPlayerLeftJail() => PhotonNetwork.RemoveCallbackTarget(this);
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == EventCodes.NewTurnEventCode)
@@ -125,19 +133,19 @@ public class UI_JailManager : MonoBehaviour,IOnEventCallback
 
             if (playerTurn == PhotonNetwork.LocalPlayer.UserId && Jailor.Instance.LocalPlayerIsInJail)
             {          
-                if(remainingTurnsInJail <= 0)
+                if(remainingTurnsInJail <= 0) //Player stayed in jail too long.
                 {
                     string playerName = GameManager.Instance.GetPlayerNicknameFromID(PhotonNetwork.LocalPlayer.UserId);
                     string notificationMessage = $"{playerName} stayed in jail too long and had to pay ${GameDataSlinger.LEAVE_JAIL_FEE_COST} to leave jail.";
 
                     Jailor.Instance.RemovePlayerFromJail(PhotonNetwork.LocalPlayer.UserId);
-
-                    Player_Piece localPlayerPiece = GameManager.Instance.GetLocalPlayerPiece();
+                    ResetRemainingTurnsInJail();
+                    Bank.Instance.RemoveMoneyFromLocalPlayerAccount(GameDataSlinger.LEAVE_JAIL_FEE_COST);
 
                     UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback(notificationMessage, callback: () =>
                     {
-                        int randomDiceThrow = UI_diceThrowManager.GiveRandomDiceValue();
-                        UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow, playerName, () => PieceMover.Instance.MovePieceForwardOverTime(localPlayerPiece, randomDiceThrow));
+                        int randomDiceThrow = UI_diceThrowManager.GetRandomDiceValue();
+                        UI_diceThrowManager.ShowSingleDiceThrow(randomDiceThrow, playerName,callback: () => PieceMover.Instance.MoveLocalPlayerPieceForwardOverTime(randomDiceThrow));
                     });
                 }
                 else
@@ -151,6 +159,8 @@ public class UI_JailManager : MonoBehaviour,IOnEventCallback
     private void OnDestroy()
     {
         GameManager.AllPlayersSpawnedEvent -= OnAllPlayersSpawned;
+        Jailor.LocalPlayerJailedEvent -= OnLocalPlayerJailed;
+        Jailor.LocalPlayerLeftJailEvent -= OnLocalPlayerLeftJail; 
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 }

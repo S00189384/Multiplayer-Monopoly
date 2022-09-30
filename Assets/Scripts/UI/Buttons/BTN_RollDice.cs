@@ -22,8 +22,8 @@ public class BTN_RollDice : BTN_Base
     {
         SetButtonInteractable(false);
 
-        //int randomDiceValue = 1;
-        int randomDiceValue = diceThrowManager.GiveRandomDiceValue();
+        int randomDiceValue = diceThrowManager.GetRandomDiceValue();
+        //int randomDiceValue = diceRollValue;
         DiceRollValue = randomDiceValue;
         diceThrowManager.ShowSingleDiceThrow(randomDiceValue, playerName: GameManager.Instance.LocalPlayerNickname, callback: () => PieceMover.Instance.MoveLocalPlayerPieceForwardOverTime(randomDiceValue));
     }
