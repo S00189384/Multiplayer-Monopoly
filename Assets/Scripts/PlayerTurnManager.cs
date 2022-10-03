@@ -26,18 +26,30 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
             Instance = this;
 
         GameManager.AllPlayersSpawnedEvent += OnAllPlayersSpawned;
-        Bank.BankruptedPlayerEvent += OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent += OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToPlayerPaymentEvent += OnPlayerBankruptDueToPlayer;
     }
+
 
     private void OnOnePlayerRemaining(string lastPlayerLeft)
     {
         OneRemainingPlayerEvent?.Invoke(lastPlayerLeft, playerTurnManager.RemovedTurns);
     }
 
-    private void OnPlayerDeclaredBankrupcy(string playerID)
+    private void OnPlayerBankruptDueToPlayer(string playerIDBankrupt, string playerIDThatCausedBankrupcy)
+    {
+        OnPlayerDeclaredBankrupt(playerIDBankrupt);
+    }
+    private void OnPlayerDeclaredBankrupcy(string playerID) 
+    {
+        OnPlayerDeclaredBankrupt(playerID);
+    }
+    private void OnPlayerDeclaredBankrupt(string playerID)
     {
         if (playerTurnManager.CurrentTurn == playerID)
+        {
             EndPlayerTurn();
+        }
 
         playerTurnManager.RemoveTurn(playerID);
         photonView.RPC(nameof(RemoveTurnRemoteClients), RpcTarget.Others, playerID);
@@ -75,12 +87,10 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        //If the player that left is their turn? End the turn.
         if (playerTurnManager.CurrentTurn == otherPlayer.UserId)
             EndPlayerTurn();
 
-        //If the player is not bankrupt and hasn't been remmoved already - remove them from the turns.
-        if(playerTurnManager.ContainsTurn(otherPlayer.UserId))
+        if (playerTurnManager.ContainsTurn(otherPlayer.UserId))
             playerTurnManager.RemoveTurn(otherPlayer.UserId);
     }
 
@@ -88,13 +98,12 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
     private void RemoveTurnRemoteClients(string playerID)
     {
         playerTurnManager.RemoveTurn(playerID);
-        print("turn removed - count is now " + playerTurnManager.NumTurnsRemaining);
     }
 
     private void OnDestroy()
     {
         GameManager.AllPlayersSpawnedEvent -= OnAllPlayersSpawned;
-        Bank.BankruptedPlayerEvent -= OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent -= OnPlayerDeclaredBankrupcy;
         playerTurnManager.OneTurnRemainingEvent -= OnOnePlayerRemaining;
     }
 }

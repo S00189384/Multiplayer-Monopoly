@@ -1,6 +1,7 @@
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 //Prompt that appears on screen when the game is over. Spawned in and moved on screen by UI_GameOver object.
@@ -34,8 +35,8 @@ public class UI_GameOverPrompt : MonoBehaviour
 
     private void OnReturnToMainMenuButtonClicked()
     {
-        Time.timeScale = 1;
+        Time.timeScale = 1;   
         PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LoadLevel(1);
+        SceneManager.LoadScene(0);
     }
 }

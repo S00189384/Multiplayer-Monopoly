@@ -25,7 +25,7 @@ public class PlayerDisplayManager : MonoBehaviourPunCallbacks, IOnEventCallback
             GameManager.AllPlayersSpawnedEvent += OnAllPlayersSpawned;
 
         PhotonNetwork.AddCallbackTarget(this);
-        Bank.BankruptedPlayerEvent += OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent += OnPlayerDeclaredBankrupcy;
     }
 
     private void OnPlayerDeclaredBankrupcy(string playerID)
@@ -100,6 +100,6 @@ public class PlayerDisplayManager : MonoBehaviourPunCallbacks, IOnEventCallback
             GameManager.AllPlayersSpawnedEvent -= OnAllPlayersSpawned;
 
         PhotonNetwork.RemoveCallbackTarget(this);
-        Bank.BankruptedPlayerEvent -= OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent -= OnPlayerDeclaredBankrupcy;
     }
 }

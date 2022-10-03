@@ -33,7 +33,8 @@ public class GameDataSlinger
 
     public const float PROPERTY_BUILDING_SELL_VALUE_PERCENTAGE_OF_PURCHASE_COST = 0.5f; //How much selling a house / hotel gives to the player as a percentage of the house original cost.
 
-    public const float UNMORTGAGE_INTEREST_COST = 0.1f;
+    public const float DEFAULT_UNMORTGAGE_INTEREST_COST = 0.1f;
+    public const float LATE_UNMORTGAGE_INTEREST_COST_FOR_NEW_OWNER = 0.2f; //What the interest cost is for unmortgaging if a player acquires a property that is mortgaged and chooses to not unmortgage immediately. Not implemented.
 
     //Jail.
     public const int MAX_NUM_GET_OUT_OF_JAIL_FREE_CARDS_PLAYER_INVENTORY = 3;

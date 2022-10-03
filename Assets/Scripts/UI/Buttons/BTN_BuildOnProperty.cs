@@ -12,18 +12,13 @@ public class BTN_BuildOnProperty : BTN_Base,IOnEventCallback
 {
     [SerializeField] private UI_PropertyConstructBuildingSelection propertyBuildingSelection;
 
-    private bool CanBuildOnProperty;
-
     public override void Awake()
     {
         base.Awake();
+        AddOnClickListener(OnMyButtonClick);
 
         PhotonNetwork.AddCallbackTarget(this);
-
         PlayerTurnManager.PlayerFinishedTurnEvent += OnPlayerFinishedTheirTurn;
-        //GameManager.AllPlayersSpawnedEvent += OnAllPlayersSpawned;
-        AddOnClickListener(OnMyButtonClick);
-        //Player built hotel event.
     }
 
     private void OnMyButtonClick()
@@ -32,16 +27,6 @@ public class BTN_BuildOnProperty : BTN_Base,IOnEventCallback
         propertyBuildingSelection.Initialise();
     }
 
-    //private void OnAllPlayersSpawned()
-    //{
-    //    OwnedPlayerTileTracker localPlayerOwnedTileTracker = GameManager.Instance.SpawnedPlayersDictionary[PhotonNetwork.LocalPlayer.UserId].GetComponent<OwnedPlayerTileTracker>();
-    //    localPlayerOwnedTileTracker.OwnsAllOfPropertyTypeEvent += OnLocalPlayerNowOwnsAllOfAPropertyType;
-    //    localPlayerOwnedTileTracker.NoLongerOwnsAllOfAnyPropertyTypeEvent += OnPlayerNoLongerOwnsAllOfAnyPropertyType;
-    //}
-
-    private void OnPlayerNoLongerOwnsAllOfAnyPropertyType() => CanBuildOnProperty = false;
-    private void OnLocalPlayerNowOwnsAllOfAPropertyType() => CanBuildOnProperty = true;
-
     private void OnPlayerFinishedTheirTurn()
     {
         SetButtonInteractable(false);
@@ -49,7 +34,6 @@ public class BTN_BuildOnProperty : BTN_Base,IOnEventCallback
 
     private void Start()
     {
-        CanBuildOnProperty = false;
         SetButtonInteractable(false);
     }
 
@@ -68,6 +52,5 @@ public class BTN_BuildOnProperty : BTN_Base,IOnEventCallback
     {
         PhotonNetwork.RemoveCallbackTarget(this);
         PlayerTurnManager.PlayerFinishedTurnEvent -= OnPlayerFinishedTheirTurn;
-       // GameManager.AllPlayersSpawnedEvent -= OnAllPlayersSpawned;
     }
 }

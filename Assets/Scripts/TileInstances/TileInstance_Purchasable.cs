@@ -21,6 +21,7 @@ public abstract class TileInstance_Purchasable : TileInstance
 
     //Events.
     public event Action<string> NewOwnerEvent;
+    public event Action LostOwnershipEvent;
     public event Action<TileInstance_Purchasable> MortgagedEvent;
     public event Action<TileInstance_Purchasable> UnmortgagedEvent;
 
@@ -33,7 +34,6 @@ public abstract class TileInstance_Purchasable : TileInstance
     //Mortgaging / Unmortgaging.
     public virtual void MortgageTile()
     {
-        Bank.Instance.AddMoneyToAccount(OwnerID, GetPurchasableData.MortgageValue);
         MortgagedEvent?.Invoke(this);
         photonView.RPC(nameof(MortgageTileRPC), RpcTarget.All);
     }
@@ -46,9 +46,14 @@ public abstract class TileInstance_Purchasable : TileInstance
 
     public virtual void UnmortgageTile()
     {
-        Bank.Instance.RemoveMoneyFromAccount(OwnerID, GetPurchasableData.UnmortgageCost);
         UnmortgagedEvent?.Invoke(this);
         photonView.RPC(nameof(UnmortgageTileRPC), RpcTarget.All);
+    }
+
+    public void UnmortgageTileOnTileReset()
+    {
+        UnmortgagedEvent?.Invoke(this);
+        IsMortgaged = false;
     }
 
     [PunRPC]
@@ -65,16 +70,21 @@ public abstract class TileInstance_Purchasable : TileInstance
             gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.mortgageableLayerName);
 
         OwnerID = playerID;
+        print("gave ownership");
         NewOwnerEvent?.Invoke(OwnerID);
-
-        //photonView.RPC(nameof(GiveOwnershipToPlayerForOtherClients), RpcTarget.Others, playerID);
     }
 
     [PunRPC]
     public void GiveOwnershipToPlayerForOtherClients(string playerID)
     {
         OwnerID = playerID;
-        //NewOwnerEvent?.Invoke(OwnerID);
+    }
+
+    public void RemovePlayerOwnershipForLocalClient()
+    {
+        gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.unownedLayerMaskName);
+        OwnerID = string.Empty;
+        LostOwnershipEvent?.Invoke();
     }
 
     public void RemovePlayerOwnership()
@@ -85,6 +95,6 @@ public abstract class TileInstance_Purchasable : TileInstance
     [PunRPC]
     public void RemovePlayerOwnershipRPC()
     {
-        OwnerID = null;
+        OwnerID = string.Empty;
     }
 }

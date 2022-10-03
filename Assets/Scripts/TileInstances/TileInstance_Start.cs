@@ -10,6 +10,7 @@ public class TileInstance_Start : TileInstance, iPlayerProcessable
 
     private void OnPlayerPassedGo(PlayerMove playerMove)
     {
+        print("Player passed go");
         Bank.Instance.AddMoneyToAccount(playerMove.PlayerID, GameDataSlinger.PASS_GO_MONEY_RECIEVED);
     }
 

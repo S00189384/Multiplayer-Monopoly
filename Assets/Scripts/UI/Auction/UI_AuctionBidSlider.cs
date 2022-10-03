@@ -19,13 +19,17 @@ public class UI_AuctionBidSlider : MonoBehaviourPun
 
     public int PlayerBid { get { return (int)bidSlider.value; } }
 
-    //Start.
-    private void Awake() => BTN_AuctionBid.PlayerBiddedAtAuction += OnPlayerBiddedAtAuction;
     private void Start()
     {
-        SetMinSliderValue(GameDataSlinger.MIN_AUCTION_BET);
-        SetMaxSliderValue(Bank.Instance.GetLocalPlayerMoneyAccount.Balance);
-        UpdateSliderValueText(GameDataSlinger.MIN_AUCTION_BET);
+        if (GameManager.Instance.LocalPlayerIsAnActivePlayer)
+        {
+            BTN_AuctionBid.PlayerBiddedAtAuction += OnPlayerBiddedAtAuction;
+            SetMinSliderValue(GameDataSlinger.MIN_AUCTION_BET);
+            SetMaxSliderValue(Bank.Instance.GetLocalPlayerMoneyAccount.Balance);
+            UpdateSliderValueText(GameDataSlinger.MIN_AUCTION_BET);
+        }
+        else
+            gameObject.SetActive(false);
     }
 
     private void OnPlayerBiddedAtAuction(string playerID, int bidAmount)

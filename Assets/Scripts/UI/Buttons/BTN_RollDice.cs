@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 //Button for rolling a dice to move forward on the board.
 //Calls on ui dice throw manager to show the result of the dice throw to the player. 
@@ -12,6 +14,8 @@ public class BTN_RollDice : BTN_Base
     //Testing - for making player go to a tile.
     [SerializeField] private int diceRollValue;
 
+    [SerializeField] private TMP_InputField inputField;
+
     public override void Awake()
     {
         base.Awake();
@@ -23,7 +27,8 @@ public class BTN_RollDice : BTN_Base
         SetButtonInteractable(false);
 
         //int randomDiceValue = diceThrowManager.GetRandomDiceValue();
-        int randomDiceValue = diceRollValue;
+        //int randomDiceValue = diceRollValue;
+        int randomDiceValue = int.Parse(inputField.text);
         DiceRollValue = randomDiceValue;
         diceThrowManager.ShowSingleDiceThrow(randomDiceValue, playerName: GameManager.Instance.LocalPlayerNickname, callback: () => PieceMover.Instance.MoveLocalPlayerPieceForwardOverTime(randomDiceValue));
     }

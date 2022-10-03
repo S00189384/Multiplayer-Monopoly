@@ -17,8 +17,8 @@ public class UI_BankrupcyConfirmation : MonoBehaviour
     [SerializeField] private Transform confirmpromptSpawnTransform;
 
     [Header("UI Sequence Settings")]
-    [SerializeField] private float timeToFadeBackground = 0.6f;
-    [SerializeField] private float timeToMoveUIElements = 0.7f;
+    [SerializeField] private float timeToFadeBackground = 0.5f;
+    [SerializeField] private float timeToMoveUIElements = 0.5f;
     [SerializeField] private LeanTweenType tweenType;
 
     private GameObject GO_spawnedPrompt;
@@ -31,7 +31,6 @@ public class UI_BankrupcyConfirmation : MonoBehaviour
         spawnedPrompt.UpdateDisplay(OnNoButtonClickedOnPanel, OnYesButtonClickedOnPanel, true);
         GO_spawnedPrompt = spawnedPrompt.gameObject;
         GO_spawnedPrompt.transform.localEulerAngles = Vector3.zero;
-
 
         LeanTween.alphaCanvas(CG_Background, 1f, timeToMoveUIElements).setEase(tweenType);
         LeanTween.move(GO_spawnedPrompt, transform.position, timeToMoveUIElements).setEase(tweenType);
@@ -53,14 +52,14 @@ public class UI_BankrupcyConfirmation : MonoBehaviour
         LeanTween.move(GO_spawnedPrompt, confirmpromptSpawnTransform.position, timeToMoveUIElements).setEase(tweenType)
             .setOnComplete(()=> 
             {
-                PlayerConfirmedBankrupcy();
                 Destroy(GO_spawnedPrompt);
-                mainUIObject.SetActive(false);
-            });
-    }
 
-    private void PlayerConfirmedBankrupcy()
-    {
-        Bank.Instance.BankruptPlayer(PhotonNetwork.LocalPlayer.UserId);
+                UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback($"{GameManager.Instance.GetPlayerNicknameFromID(PhotonNetwork.LocalPlayer.UserId)} declared bankrupcy!",
+                    callback: () => 
+                    {
+                        Bank.Instance.BankruptPlayer(PhotonNetwork.LocalPlayer.UserId);
+                        mainUIObject.SetActive(false);
+                    });
+            });
     }
 }

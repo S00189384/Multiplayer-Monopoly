@@ -27,7 +27,9 @@ public class UI_ManageTurn : MonoBehaviour, IOnEventCallback
 
     [SerializeField] private GameObject GO_BankruptWarning;
 
+    private bool IsMyTurn { get { return buttonHolderParent.activeSelf; } }
     private bool canRollDice;
+    private bool canDeclareBankrupcy;
 
     private void Awake()
     {
@@ -41,7 +43,7 @@ public class UI_ManageTurn : MonoBehaviour, IOnEventCallback
         PieceMover.PlayerMovedEvent += OnFinishedMove;
         Jailor.LocalPlayerJailedEvent += OnLocalPlayerJailed;
         Jailor.LocalPlayerLeftJailEvent += OnLocalPlayerLeftJail;
-        Bank.BankruptedPlayerEvent += OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent += OnPlayerDeclaredBankrupcy;
     }
 
     private void OnPlayerDeclaredBankrupcy(string playerID)
@@ -74,10 +76,16 @@ public class UI_ManageTurn : MonoBehaviour, IOnEventCallback
     private void OnPlayerEnteredBankrupcy(PlayerMoneyAccount playerMoneyAccount)
     {
         GO_BankruptWarning.SetActive(true);
+        canDeclareBankrupcy = true;
+        if (IsMyTurn)
+            btnDeclareBankrupcy.SetButtonInteractable(canDeclareBankrupcy);
     }
     private void OnPlayerLeftBankrupcy(PlayerMoneyAccount playerMoneyAccount)
     {
         GO_BankruptWarning.SetActive(false);
+        canDeclareBankrupcy = false;
+        if (IsMyTurn)
+            btnDeclareBankrupcy.SetButtonInteractable(canDeclareBankrupcy);
     }
 
     //When it becomes my turn - enable UI.
@@ -85,21 +93,13 @@ public class UI_ManageTurn : MonoBehaviour, IOnEventCallback
     {
         buttonHolderParent.SetActive(true);
         btnRollDice.SetButtonInteractable(canRollDice);
-        btnDeclareBankrupcy.SetButtonInteractable(true);
+        btnDeclareBankrupcy.SetButtonInteractable(canDeclareBankrupcy);
     }
 
     //When I end my turn, tell turn manager and reset UI.
     public void OnFinishTurnButtonClicked()
     {
         playerTurnManager.EndPlayerTurn();
-        //EndTurn();
-    }
-
-    private void EndTurn()
-    {
-        playerTurnManager.EndPlayerTurn();
-
-        //DisableUIElements();
     }
 
     private void DisableUIElements()
@@ -131,7 +131,6 @@ public class UI_ManageTurn : MonoBehaviour, IOnEventCallback
         canRollDice = true;
         btnRollDice.SetButtonInteractable(false); //Left jail but dice roll is done automatically for them so disable.
         UI_DoubleDiceThrowPanel.UnsuccessfullyRolledADouble -= OnPlayerUnsuccessfullyRolledADouble;
-        //btnFinishTurn.SetButtonInteractable(true);
     }
 
     //On new event call.
@@ -156,6 +155,6 @@ public class UI_ManageTurn : MonoBehaviour, IOnEventCallback
         PieceMover.PlayerMovedEvent -= OnFinishedMove;
         Jailor.LocalPlayerJailedEvent -= OnLocalPlayerJailed;
         Jailor.LocalPlayerLeftJailEvent -= OnLocalPlayerLeftJail;
-        Bank.BankruptedPlayerEvent -= OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent -= OnPlayerDeclaredBankrupcy;
     }
 }

@@ -21,23 +21,28 @@ public class BTN_AuctionBid : BTN_Base
 
     public override void Awake()
     {
-        playerMoneyAccount = Bank.Instance.GetLocalPlayerMoneyAccount;
-        if (playerMoneyAccount.Balance >= 0)
-            hasBalanceToBid = true;
+        if(GameManager.Instance.LocalPlayerIsAnActivePlayer)
+        {
+            playerMoneyAccount = Bank.Instance.GetLocalPlayerMoneyAccount;
+            if (playerMoneyAccount.Balance >= 0)
+                hasBalanceToBid = true;
 
-        AuctionTurnManager.NewPlayerAuctionTurnEvent += OnNewPlayerAuctionTurn;
-        AuctionTurnManager.PlayerWonAuctionEvent += OnPlayerWonAuction;
-        BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent += OnPlayerFoldedFromAuction;
+            AuctionTurnManager.NewPlayerAuctionTurnEvent += OnNewPlayerAuctionTurn;
+            AuctionTurnManager.PlayerWonAuctionEvent += OnPlayerWonAuction;
+            BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent += OnPlayerFoldedFromAuction;
 
-
-        AddOnClickListener(Bid);
+            AddOnClickListener(Bid);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnPlayerWonAuction(string playerID,int finalBid)
     {
         SetButtonInteractable(false);
     }
-
 
     private void OnPlayerFoldedFromAuction(string playerID)
     {

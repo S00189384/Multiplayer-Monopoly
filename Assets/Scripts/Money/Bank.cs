@@ -18,9 +18,15 @@ public class Bank : MonoBehaviourPun
     public PlayerMoneyAccount GetLocalPlayerMoneyAccount => playerMoneyAccountDictionary[PhotonNetwork.LocalPlayer.UserId];
 
     //Events.
-    public static event Action<PlayerPaymentExchange> PlayerPaymentExchangeEvent; //Make not local.
+    public static event Action<PlayerPaymentExchange> PlayerPaymentExchangeEvent;
     public static event Action<string, string, int> RentPaymentMadeBetweenPlayersEvent;
-    public static event Action<string> BankruptedPlayerEvent;
+    public static event Action<string> PlayerDeclaredBankruptDueToBankPaymentEvent; //Player is confirmed as bankrupt due to paying the bank a value.
+
+    public static event Action<string, string> PlayerDeclaredBankruptDueToPlayerPaymentEvent; //player bankrupt, player caused. Player is confirmed as bankrupt caused by paying another player.
+    public Dictionary<string, string> bankrupcyBetweenPlayersDictionary = new Dictionary<string, string>();//player bankrupt, player caused.
+
+    //private List<string> playersDeclaredBankruptList = new List<string>();
+    //public bool PlayerIsBankrupt(string playerID) => playersDeclaredBankruptList.Contains(playerID);
 
     private void Awake()
     {
@@ -45,13 +51,13 @@ public class Bank : MonoBehaviourPun
     public void ProcessPlayerTilePurchase(PlayerMoneyAccount playerMoneyAccount, TileInstance_Purchasable purchasableTile)
     {
         RemoveMoneyFromAccount(playerMoneyAccount.PlayerID, purchasableTile.PurchaseCost);
-        TileOwnershipManager.Instance.ProcessPlayerTilePurchase(playerMoneyAccount.PlayerID, purchasableTile.photonView.ViewID);
+        TileOwnershipManager.Instance.ProcessPlayerTilePurchaseAllClients(playerMoneyAccount.PlayerID, purchasableTile.photonView.ViewID);
     }
     public void ProcessPlayerTilePurchase(string playerID, int tilePhotonID,int tilePurchaseCost)
     {
         PlayerMoneyAccount playerMoneyAccount = playerMoneyAccountDictionary[playerID];
         RemoveMoneyFromAccount(playerID, tilePurchaseCost);
-        TileOwnershipManager.Instance.ProcessPlayerTilePurchase(playerID, tilePhotonID);
+        TileOwnershipManager.Instance.ProcessPlayerTilePurchaseAllClients(playerID, tilePhotonID);
     }
 
     //Adding money to player accounts.
@@ -74,12 +80,18 @@ public class Bank : MonoBehaviourPun
         GetLocalPlayerMoneyAccount.SubtractFromBalance(amount);
     }
 
-    //Bankrupcy.
-    public void BankruptPlayer(string playerID)
+    //Bankrupcy / Local.
+    public void BankruptPlayer(string playerIDToBankrupt)
     {
-        //Remove account?
-        //Tile ownership manager - what to do?
-        BankruptedPlayerEvent?.Invoke(playerID);
+        //playersDeclaredBankruptList.Add(playerIDToBankrupt);
+
+        if (bankrupcyBetweenPlayersDictionary.ContainsKey(playerIDToBankrupt))
+        {
+            PlayerDeclaredBankruptDueToPlayerPaymentEvent?.Invoke(playerIDToBankrupt,bankrupcyBetweenPlayersDictionary[playerIDToBankrupt]);
+            bankrupcyBetweenPlayersDictionary.Remove(playerIDToBankrupt);
+        }
+        else
+            PlayerDeclaredBankruptDueToBankPaymentEvent?.Invoke(playerIDToBankrupt);
     }
 
     //Rent between players.
@@ -116,6 +128,12 @@ public class Bank : MonoBehaviourPun
 
     public void MakePlayerPaymentExchange(PlayerMoneyAccount playerFrom,PlayerMoneyAccount playerTo,int amount)
     {
+        if (playerFrom.WouldGoBankrupt(amount))
+        {
+            print($"added to bankrupt between players dict : {GameManager.Instance.GetPlayerNicknameFromID(playerFrom.PlayerID)} bankrupted by {GameManager.Instance.GetPlayerNicknameFromID(playerTo.PlayerID)}");
+            bankrupcyBetweenPlayersDictionary.Add(playerFrom.PlayerID, playerTo.PlayerID);
+        }
+
         playerFrom.SubtractFromBalance(amount);
         playerTo.AddToBalance(amount);
 

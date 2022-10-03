@@ -9,6 +9,7 @@ using UnityEngine;
 public class UI_AuctionManager : MonoBehaviourPunCallbacks
 {
     private const string singleTilePromptResourcesPrefabPath = "UI/AuctionPromptSingleTile";
+    private const string playerPossessionsPromptResourcesPrefabPath = "UI/AuctionPromptPlayerPossessions";
 
     [Header("UI Components")]
     [SerializeField] private GameObject GO_auctionUI;
@@ -29,14 +30,17 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
     private GameObject spawnedSingleTileAuctionPrompt;
     private int photonIDOfTileForAuction;
 
-    public Queue<string> playersToAuctionPossessionsQueue = new Queue<string>();
-
     //Start.
     private void Awake()
     {
         BTN_StartAuction.AuctionStartedEvent += OnSingleTileAuction;
         AuctionTurnManager.PlayerWonAuctionEvent += OnPlayerWonAuction;
-        Bank.BankruptedPlayerEvent += OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent += OnPlayerDeclaredBankruptDueToBankPayment;
+    }
+
+    private void OnPlayerDeclaredBankruptDueToBankPayment(string playerID)
+    {
+        StartPlayerPossessionsAuction(playerID);
     }
 
     private void Start()
@@ -44,22 +48,15 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
         headerOffScreenPosition = TMP_Header.transform.position;
     }
 
-    //Auctioning player possessions on disconnect / bankrupcy.
-    private void OnPlayerDeclaredBankrupcy(string playerID) => AddToAuctionPlayerPossessionsQueue(playerID);
-    public override void OnPlayerLeftRoom(Player otherPlayer) => AddToAuctionPlayerPossessionsQueue(otherPlayer.UserId);
-
-    private void AddToAuctionPlayerPossessionsQueue(string playerID)
+    private void StartPlayerPossessionsAuction(string playerID)
     {
-        if(playersToAuctionPossessionsQueue.Count <= 0)
-            PlayerTurnManager.PlayerFinishedTurnEvent += OnPlayerFinishedTurn;
+        GameObject spawnedPrompt = PhotonNetwork.Instantiate(playerPossessionsPromptResourcesPrefabPath, auctionPanelSpawnTransform.position, Quaternion.identity);
+        int photonIDOfSpawnedPrompt = spawnedPrompt.GetComponent<PhotonView>().ViewID;
 
-        playersToAuctionPossessionsQueue.Enqueue(playerID);
+        photonView.RPC(nameof(FixDisplayOfAuctionPrompt), RpcTarget.All, photonIDOfSpawnedPrompt);
+        photonView.RPC(nameof(InitialisePlayersPossessionsAuctionPrompt), RpcTarget.All, photonIDOfSpawnedPrompt, playerID);
     }
 
-    private void OnPlayerFinishedTurn()
-    {
-        print($"auction manager spawns UI for possession auction now {playersToAuctionPossessionsQueue.Count}");
-    }
 
     private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid)
     {
@@ -80,7 +77,7 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
         int photonIDOfSpawnedPrompt = spawnedPrompt.GetComponent<PhotonView>().ViewID;
 
         photonView.RPC(nameof(FixDisplayOfAuctionPrompt), RpcTarget.All, photonIDOfSpawnedPrompt);
-        photonView.RPC(nameof(InitialiseAuctionPrompt), RpcTarget.All, photonIDOfSpawnedPrompt, playerIDThatStartedAuction, photonIDOfTileForAuction);
+        photonView.RPC(nameof(InitialiseSingleTileAuctionPrompt), RpcTarget.All, photonIDOfSpawnedPrompt, playerIDThatStartedAuction, photonIDOfTileForAuction);
     }
 
     [PunRPC]
@@ -92,13 +89,22 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
         spawnedSingleTileAuctionPrompt.transform.localEulerAngles = Vector3.zero;
     }
     [PunRPC]
-    private void InitialiseAuctionPrompt(int spawnedPromptPhotonID,string playerIDThatStartedAuction,int photonIDOfTile)
+    private void InitialiseSingleTileAuctionPrompt(int spawnedPromptPhotonID,string playerIDThatStartedAuction,int photonIDOfTile)
     {
         this.photonIDOfTileForAuction = photonIDOfTile;
 
         TMP_Header.text = $"{GameManager.Instance.GetPlayerNicknameFromID(playerIDThatStartedAuction)} started an auction!";
         GO_auctionUI.SetActive(true);
         PhotonNetwork.GetPhotonView(spawnedPromptPhotonID).GetComponent<UI_AuctionPromptSinglePurchasableTile>().InitialisePrompt(playerIDThatStartedAuction, photonIDOfTile);
+        MoveAuctionPanelOnScreen();
+    }
+
+    [PunRPC]
+    private void InitialisePlayersPossessionsAuctionPrompt(int spawnedPromptPhotonID, string playerID)
+    {
+        TMP_Header.text = $"{GameManager.Instance.GetPlayerNicknameFromID(playerID)} is bankrupt due to a bank payment and their possessions are up for auction!";
+        GO_auctionUI.SetActive(true);
+        PhotonNetwork.GetPhotonView(spawnedPromptPhotonID).GetComponent<UI_AuctionPromptPlayerPossessions>().InitialisePrompt(playerID);
         MoveAuctionPanelOnScreen();
     }
     private void MoveAuctionPanelOnScreen()
@@ -125,7 +131,6 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
     {
         BTN_StartAuction.AuctionStartedEvent -= OnSingleTileAuction;
         AuctionTurnManager.PlayerWonAuctionEvent -= OnPlayerWonAuction;
-        Bank.BankruptedPlayerEvent -= OnPlayerDeclaredBankrupcy;
-        PlayerTurnManager.PlayerFinishedTurnEvent -= OnPlayerFinishedTurn;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent -= OnPlayerDeclaredBankruptDueToBankPayment;
     }
 }

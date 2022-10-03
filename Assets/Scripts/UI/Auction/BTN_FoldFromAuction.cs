@@ -15,10 +15,17 @@ public class BTN_FoldFromAuction : BTN_Base
 
     public override void Awake()
     {
-        base.Awake();
+        if (GameManager.Instance.LocalPlayerIsAnActivePlayer)
+        {
+            base.Awake();
 
-        AddOnClickListener(FoldFromAuction);
-        AuctionTurnManager.PlayerWonAuctionEvent += OnPlayerWonAuction;
+            AddOnClickListener(FoldFromAuction);
+            AuctionTurnManager.PlayerWonAuctionEvent += OnPlayerWonAuction;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid)

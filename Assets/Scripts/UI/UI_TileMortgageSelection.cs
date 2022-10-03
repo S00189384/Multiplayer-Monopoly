@@ -80,14 +80,16 @@ public class UI_TileMortgageSelection : MonoBehaviour
         {
             if (purchasableTile.OwnerID == PhotonNetwork.LocalPlayer.UserId)
             {
-                if (purchasableTile.IsMortgaged && moneyAccountOfLocalPlayer.CanAffordPurchase(purchasableTile.GetPurchasableData.UnmortgageCost))
+                if (purchasableTile.IsMortgaged && moneyAccountOfLocalPlayer.CanAffordPurchase(purchasableTile.GetPurchasableData.DefaultUnmortgageCost))
                 {
                     purchasableTile.UnmortgageTile();
+                    Bank.Instance.RemoveMoneyFromAccount(purchasableTile.OwnerID, purchasableTile.GetPurchasableData.DefaultUnmortgageCost);
                     UpdateMortgageText();
                 }
                 else if(!purchasableTile.IsMortgaged)
                 {
                     purchasableTile.MortgageTile();
+                    Bank.Instance.AddMoneyToAccount(purchasableTile.OwnerID, purchasableTile.GetPurchasableData.MortgageValue);
                     UpdateMortgageText();
                 }
             }
@@ -100,8 +102,8 @@ public class UI_TileMortgageSelection : MonoBehaviour
 
         if (purchasableTile.IsMortgaged) //Unmortgage info.
         {
-            int unmortgageCost = purchasableTile.GetPurchasableData.UnmortgageCost;
-            playerBalanceAfterSelection = moneyAccountOfLocalPlayer.GetBalanceWithPurchase(purchasableTile.GetPurchasableData.UnmortgageCost);
+            int unmortgageCost = purchasableTile.GetPurchasableData.DefaultUnmortgageCost;
+            playerBalanceAfterSelection = moneyAccountOfLocalPlayer.GetBalanceWithPurchase(purchasableTile.GetPurchasableData.DefaultUnmortgageCost);
             changeInBalance = moneyAccountOfLocalPlayer.Balance - playerBalanceAfterSelection;
 
             TMP_MortgageInfo.text = $"Unmortgage {purchasableTile.GetPurchasableData.Name}";

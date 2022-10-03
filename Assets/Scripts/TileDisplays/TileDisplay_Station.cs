@@ -25,6 +25,13 @@ public class TileDisplay_Station : TileDisplay_PurchasableTile
         SPREND_Station.sprite = stationData.SPR_Station;
     }
 
+    public void ChangeToMortgaged_LC(TileInstance_Purchasable purchasableTileInstance)
+    {
+        GO_Mortgaged.SetActive(true);
+        TMP_TileNameMortgaged.text = stationData.Name;
+        TMP_MortgagedInfo.text = $"Mortgaged for ${stationData.PurchaseCost}";
+    }
+
     public override void ChangeToMortgaged(TileInstance_Purchasable purchasableTileInstance)
     {
         GO_Mortgaged.SetActive(true);

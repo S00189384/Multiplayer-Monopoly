@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -24,6 +25,12 @@ public abstract class TileDisplay_PurchasableTile : TileDisplay
     {
         base.Awake();
         GetComponent<TileInstance_Purchasable>().NewOwnerEvent += OnNewOwnerOfTile;
+        GetComponent<TileInstance_Purchasable>().LostOwnershipEvent += OnTileLostOwnership;
+    }
+
+    private void OnTileLostOwnership()
+    {
+        RemoveOwnerSprite();
     }
 
     private void OnNewOwnerOfTile(string playerID)
@@ -46,6 +53,7 @@ public abstract class TileDisplay_PurchasableTile : TileDisplay
     {
         SPR_OwnerIcon.sprite = GameManager.Instance.GetPlayerSprite(playerID);
     }
+    public void RemoveOwnerSprite() => SPR_OwnerIcon.sprite = null;
 
     public abstract void ChangeToMortgaged(TileInstance_Purchasable purchasableTileInstance);
     public abstract void ChangeToUnmortgaged(TileInstance_Purchasable purchasableTileInstance);

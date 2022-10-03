@@ -28,7 +28,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     //Active players.
     //Players that are not bankrupt.
     public List<string> ActivePlayersIDList = new List<string>();
-    //public List<string> BankruptPlayersIDList = new List<string>();
+    public bool LocalPlayerIsAnActivePlayer { get { return ActivePlayersIDList.Contains(PhotonNetwork.LocalPlayer.UserId); } }
+
+
     public List<string> DisconnectedPlayersIDList = new List<string>();
 
     [SerializeField] private Sprite[] playerSprites;
@@ -63,15 +65,26 @@ public class GameManager : MonoBehaviourPunCallbacks
             Instance = this;
 
         PlayerTurnManager.OneRemainingPlayerEvent += OnOneRemainingPlayerLeftActiveInGame;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent += OnPlayerDeclaredBankruptDueToBank;
+        Bank.PlayerDeclaredBankruptDueToPlayerPaymentEvent += OnPlayerDeclaredBankruptDueToPlayer;
+    }
+
+    private void OnPlayerDeclaredBankruptDueToPlayer(string playerIDBankrupt, string playerIDThatCausedBankrupcy) => photonView.RPC(nameof(RemovePlayerFromActivePlayers),RpcTarget.All,playerIDBankrupt);
+    private void OnPlayerDeclaredBankruptDueToBank(string playerIDBankrupt) => photonView.RPC(nameof(RemovePlayerFromActivePlayers), RpcTarget.All, playerIDBankrupt);
+
+    [PunRPC]
+    private void RemovePlayerFromActivePlayers(string playerID)
+    {
+        ActivePlayersIDList.Remove(playerID);
     }
 
     private void Update()
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
-            if(Input.GetKeyDown(KeyCode.L))
+            if (Input.GetKeyDown(KeyCode.A))
             {
-                TileOwnershipManager.Instance.TransferAllPlayerOwnedTilesToAnotherPlayer(PhotonNetwork.LocalPlayer.UserId, ActivePlayersIDList[1],true);
+                TileOwnershipManager.Instance.TransferAllPlayerOwnedTilesToAnotherPlayer(PhotonNetwork.LocalPlayer.UserId, ActivePlayersIDList[1]);
             }
         }
     }
@@ -189,6 +202,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void OnDestroy()
     {
         PlayerTurnManager.OneRemainingPlayerEvent -= OnOneRemainingPlayerLeftActiveInGame;
+        Bank.PlayerDeclaredBankruptDueToBankPaymentEvent -= OnPlayerDeclaredBankruptDueToBank;
+        Bank.PlayerDeclaredBankruptDueToPlayerPaymentEvent -= OnPlayerDeclaredBankruptDueToPlayer;
     }
 }
 

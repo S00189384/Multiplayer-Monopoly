@@ -10,7 +10,7 @@ public class PlayerMoneyAccount : MonoBehaviourPun
 {
     public string PlayerID;
     [SerializeField] private int balance;
-    public int Balance 
+    public int Balance
     { 
         get => balance; 
         set 
@@ -20,15 +20,13 @@ public class PlayerMoneyAccount : MonoBehaviourPun
             balance = value;
             BalanceChangedEvent?.Invoke(balance);
 
-            if (previousBalance < 0 && balance > 0)
+            if (previousBalance < 0 && balance >= 0)
             {
                 print("Player left bankrupcy");
                 LeftBankruptsyEvent?.Invoke(this);
             }
-
-            if (balance < 0)
+            else if (balance < 0)
             {
-                print("Player entered bankrupcy");
                 EnteredBankruptsyEvent?.Invoke(this);
             }
         } 
@@ -40,14 +38,17 @@ public class PlayerMoneyAccount : MonoBehaviourPun
     public event Action<int> BalanceChangedEvent;
 
     //Testing.
-    //private void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.P) && photonView.IsMine)
-    //    {
-    //        SetBalance(0);
-    //    }
-    //}
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P) && photonView.IsMine)
+        {
+            SetBalance(-2);
+        }
+        if (Input.GetKeyDown(KeyCode.L) && photonView.IsMine)
+        {
+            SetBalance(0);
+        }
+    }
 
     public void InitialiseAccount(string playerID)
     {
@@ -56,6 +57,7 @@ public class PlayerMoneyAccount : MonoBehaviourPun
     }
     public int GetBalanceWithPurchase(int purchaseCost) => Balance - purchaseCost;
     public int GetBalanceWithMoneyGain(int gainAmount) => Balance + gainAmount;
+    public bool WouldGoBankrupt(int moneyLoss) => Balance - moneyLoss < 0;
     public bool CanAffordPurchase(int purchaseCost) => (Balance - purchaseCost) > 0;
 
     public void AddToBalance(int amount)
@@ -68,11 +70,11 @@ public class PlayerMoneyAccount : MonoBehaviourPun
     private void AddToBalanceRemoteClients(int amount)
     {
         Balance += amount;
-
     }
     public void SubtractFromBalance(int amount)
     {
         Balance -= amount;
+
         photonView.RPC(nameof(SubtractFromBalanceRemoteClients), RpcTarget.Others, amount);
     }
 

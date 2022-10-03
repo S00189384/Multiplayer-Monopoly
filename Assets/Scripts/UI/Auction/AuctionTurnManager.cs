@@ -26,6 +26,7 @@ public class AuctionTurnManager : MonoBehaviourPun
 
         auctionTurns = new TurnManager<string>();
         auctionTurns.Initialise(GameManager.Instance.ActivePlayersIDList);
+        print(GameManager.Instance.ActivePlayersIDList.Count);
 
         NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn,currentAuctionBid);
     }
