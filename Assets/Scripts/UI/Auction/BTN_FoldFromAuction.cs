@@ -28,7 +28,7 @@ public class BTN_FoldFromAuction : BTN_Base
         }
     }
 
-    private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid)
+    private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid,AuctionType auctionType)
     {
         SetButtonInteractable(false);
     }

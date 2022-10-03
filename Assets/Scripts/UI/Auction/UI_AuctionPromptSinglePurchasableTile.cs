@@ -14,10 +14,13 @@ public class UI_AuctionPromptSinglePurchasableTile : MonoBehaviourPun
     [SerializeField] private Transform tileInfoSpawnTransform;
     [Header("Components of prompt")]
     [SerializeField] private TextMeshProUGUI TMP_OriginalTilePurchaseCost;
+    [SerializeField] private GameObject GO_SpectatingAuctionDisplay;
     [SerializeField] private UI_AuctionTurnDisplayManager turnDisplayManager;
 
     public void InitialisePrompt(string playerIDStartedAuction, int photonIDOfTileForAuction)
     {
+        GetComponent<AuctionTurnManager>().ReceiveAuctionTypeOfCurrentAuction(AuctionType.SingleTile);
+
         //Spawn info display of the tile that is up for auction.
         Dictionary<Type,Action<int>> tileInfoDisplayMethodCallDictionary = new Dictionary<Type, Action<int>>()
         {
@@ -30,6 +33,9 @@ public class UI_AuctionPromptSinglePurchasableTile : MonoBehaviourPun
         tileInfoDisplayMethodCallDictionary[typeOfPurchasableTile](photonIDOfTileForAuction);
 
         turnDisplayManager.SpawnActivePlayersDisplay(GameManager.Instance.ActivePlayersIDList);
+
+        if (!GameManager.Instance.LocalPlayerIsAnActivePlayer)
+            GO_SpectatingAuctionDisplay.SetActive(true);
     }
 
     public void SpawnPropertyInfoDisplay(int photonViewID)

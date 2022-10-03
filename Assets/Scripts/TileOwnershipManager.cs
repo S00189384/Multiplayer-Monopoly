@@ -91,7 +91,8 @@ public class TileOwnershipManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         //Remove their owned tiles.
-        RemoveAllPlayerOwnedTiles(otherPlayer.UserId,true);
+        if(Bank.Instance.PlayerIsBankrupt(otherPlayer.UserId) == false)
+            RemoveAllPlayerOwnedTiles(otherPlayer.UserId,true);
     }
 
     #region Processing player acquiring a property
@@ -235,7 +236,7 @@ public class TileOwnershipManager : MonoBehaviourPunCallbacks
         }         
     }
 
-    //Player disconnects - what if 
+    //Player disconnects.
     private void RemoveAllPlayerOwnedTiles(string playerID,bool unmortgageTile)
     {
         OwnedPlayerTileTracker ownedTileTrackerOfGiver = PlayersOwnedTileTrackerDictionary[playerID];

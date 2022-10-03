@@ -48,18 +48,16 @@ public class UI_BankrupcyConfirmation : MonoBehaviour
     }
     private void OnYesButtonClickedOnPanel()
     {
+        //Destroy(GO_spawnedPrompt);
+        //mainUIObject.SetActive(false);
+        Bank.Instance.BankruptPlayer(PhotonNetwork.LocalPlayer.UserId);
+
         LeanTween.alphaCanvas(CG_Background, 0f, timeToMoveUIElements).setEase(tweenType);
         LeanTween.move(GO_spawnedPrompt, confirmpromptSpawnTransform.position, timeToMoveUIElements).setEase(tweenType)
-            .setOnComplete(()=> 
+            .setOnComplete(() =>
             {
                 Destroy(GO_spawnedPrompt);
-
-                UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback($"{GameManager.Instance.GetPlayerNicknameFromID(PhotonNetwork.LocalPlayer.UserId)} declared bankrupcy!",
-                    callback: () => 
-                    {
-                        Bank.Instance.BankruptPlayer(PhotonNetwork.LocalPlayer.UserId);
-                        mainUIObject.SetActive(false);
-                    });
+                mainUIObject.SetActive(false);
             });
     }
 }

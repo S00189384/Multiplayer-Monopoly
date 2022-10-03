@@ -25,8 +25,8 @@ public class Bank : MonoBehaviourPun
     public static event Action<string, string> PlayerDeclaredBankruptDueToPlayerPaymentEvent; //player bankrupt, player caused. Player is confirmed as bankrupt caused by paying another player.
     public Dictionary<string, string> bankrupcyBetweenPlayersDictionary = new Dictionary<string, string>();//player bankrupt, player caused.
 
-    //private List<string> playersDeclaredBankruptList = new List<string>();
-    //public bool PlayerIsBankrupt(string playerID) => playersDeclaredBankruptList.Contains(playerID);
+    private List<string> playersDeclaredBankruptList = new List<string>();
+    public bool PlayerIsBankrupt(string playerID) => playersDeclaredBankruptList.Contains(playerID);
 
     private void Awake()
     {
@@ -83,16 +83,35 @@ public class Bank : MonoBehaviourPun
     //Bankrupcy / Local.
     public void BankruptPlayer(string playerIDToBankrupt)
     {
-        //playersDeclaredBankruptList.Add(playerIDToBankrupt);
+        photonView.RPC(nameof(FlagPlayerAsBankrupt), RpcTarget.All, playerIDToBankrupt);
+      
+        string playerNameBankrupt = GameManager.Instance.GetPlayerNicknameFromID(PhotonNetwork.LocalPlayer.UserId);
 
         if (bankrupcyBetweenPlayersDictionary.ContainsKey(playerIDToBankrupt))
         {
-            PlayerDeclaredBankruptDueToPlayerPaymentEvent?.Invoke(playerIDToBankrupt,bankrupcyBetweenPlayersDictionary[playerIDToBankrupt]);
+            string playerNameCausedBankrupcy = bankrupcyBetweenPlayersDictionary[playerIDToBankrupt];
+
+            UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback($"{playerNameBankrupt} declared bankrupcy caused by {playerNameCausedBankrupcy}!",
+                callback: () =>
+                {
+                    PlayerDeclaredBankruptDueToPlayerPaymentEvent?.Invoke(playerIDToBankrupt,bankrupcyBetweenPlayersDictionary[playerIDToBankrupt]);
+                });
+
             bankrupcyBetweenPlayersDictionary.Remove(playerIDToBankrupt);
         }
         else
+        {
             PlayerDeclaredBankruptDueToBankPaymentEvent?.Invoke(playerIDToBankrupt);
+            //UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback($"{playerNameBankrupt} declared bankrupcy caused by a bank payment!",
+            //    callback: () =>
+            //    {
+            //        PlayerDeclaredBankruptDueToBankPaymentEvent?.Invoke(playerIDToBankrupt);
+            //    });
+        }          
     }
+
+    [PunRPC]
+    private void FlagPlayerAsBankrupt(string playerID) => playersDeclaredBankruptList.Add(playerID);
 
     //Rent between players.
     public void ProcessRentPayment(string playerIDOfRentPayer,string playerIDOfRentReciever,int rentCost)

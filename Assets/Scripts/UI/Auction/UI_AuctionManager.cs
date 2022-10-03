@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+public enum AuctionType { SingleTile, PlayerPossessions }
 
 public class UI_AuctionManager : MonoBehaviourPunCallbacks
 {
@@ -22,13 +23,16 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
     private Vector3 headerOffScreenPosition;
 
     [Header("UI Sequence Settings")]
-    [SerializeField] private float timeToFadeBackground = 0.4f;
-    [SerializeField] private float timeToMoveUIElements = 0.7f;
+    [SerializeField] private float timeToFadeBackground = 0.7f;
+    [SerializeField] private float timeToMoveUIElements = 0.8f;
     [SerializeField] private float delayOfClearingUIAfterPlayerWonAuction = 1.8f;
     [SerializeField] private LeanTweenType tweenType;
 
     private GameObject spawnedSingleTileAuctionPrompt;
     private int photonIDOfTileForAuction;
+    private string playerIDThatBankruptedDueToBank;
+
+
 
     //Start.
     private void Awake()
@@ -40,7 +44,8 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
 
     private void OnPlayerDeclaredBankruptDueToBankPayment(string playerID)
     {
-        StartPlayerPossessionsAuction(playerID);
+        if(TileOwnershipManager.Instance.GetOwnedPlayerTileTracker(playerID).OwnsAPurchasableTile)       
+            StartPlayerPossessionsAuction(playerID);      
     }
 
     private void Start()
@@ -57,8 +62,7 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
         photonView.RPC(nameof(InitialisePlayersPossessionsAuctionPrompt), RpcTarget.All, photonIDOfSpawnedPrompt, playerID);
     }
 
-
-    private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid)
+    private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid,AuctionType auctionType)
     {
         var sequence = LeanTween.sequence();
         sequence.append(delayOfClearingUIAfterPlayerWonAuction);
@@ -67,7 +71,19 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
             MoveAuctionPanelOffScreen();
 
             if(playerIDThatWonAuction == PhotonNetwork.LocalPlayer.UserId)
-                Bank.Instance.ProcessPlayerTilePurchase(playerIDThatWonAuction, photonIDOfTileForAuction, finalBid);
+            {
+                switch (auctionType)
+                {
+                    case AuctionType.SingleTile:
+                        Bank.Instance.ProcessPlayerTilePurchase(playerIDThatWonAuction, photonIDOfTileForAuction, finalBid);
+                        break;
+                    case AuctionType.PlayerPossessions:
+                        TileOwnershipManager.Instance.TransferAllPlayerOwnedTilesToAnotherPlayer(playerIDThatBankruptedDueToBank, playerIDThatWonAuction);
+                        break;
+                    default:
+                        break;
+                }
+            }
         });
     }
 
@@ -102,7 +118,8 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void InitialisePlayersPossessionsAuctionPrompt(int spawnedPromptPhotonID, string playerID)
     {
-        TMP_Header.text = $"{GameManager.Instance.GetPlayerNicknameFromID(playerID)} is bankrupt due to a bank payment and their possessions are up for auction!";
+        playerIDThatBankruptedDueToBank = playerID;
+        TMP_Header.text = $"{GameManager.Instance.GetPlayerNicknameFromID(playerID)} is bankrupt and their possessions are up for auction!";
         GO_auctionUI.SetActive(true);
         PhotonNetwork.GetPhotonView(spawnedPromptPhotonID).GetComponent<UI_AuctionPromptPlayerPossessions>().InitialisePrompt(playerID);
         MoveAuctionPanelOnScreen();
@@ -112,7 +129,7 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
         LTSeq sequence = LeanTween.sequence();
         sequence.append(LeanTween.alphaCanvas(CG_Background, 1f, timeToFadeBackground));
         sequence.append(LeanTween.move(TMP_Header.gameObject, headerTargetTransform.position, timeToMoveUIElements).setEase(tweenType));
-        sequence.append(0.7f);
+        sequence.append(1.2f);
         sequence.append(LeanTween.move(spawnedSingleTileAuctionPrompt, transform.position, timeToMoveUIElements).setEase(tweenType));
     }
     private void MoveAuctionPanelOffScreen()

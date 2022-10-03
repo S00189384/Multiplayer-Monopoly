@@ -5,14 +5,16 @@ using System;
 using System.Collections.Generic;
 
 
-public class AuctionTurnManager : MonoBehaviourPun
+public class AuctionTurnManager : MonoBehaviourPunCallbacks
 {
     private TurnManager<string> auctionTurns;
 
     public static event Action<string,int> NewPlayerAuctionTurnEvent;
-    public static event Action<string,int> PlayerWonAuctionEvent;
+    public static event Action<string,int,AuctionType> PlayerWonAuctionEvent;
 
     private int currentAuctionBid;
+    private AuctionType auctionType;
+    public void ReceiveAuctionTypeOfCurrentAuction(AuctionType auctionType) => this.auctionType = auctionType;
 
     private void Awake()
     {
@@ -28,14 +30,18 @@ public class AuctionTurnManager : MonoBehaviourPun
         auctionTurns.Initialise(GameManager.Instance.ActivePlayersIDList);
         print(GameManager.Instance.ActivePlayersIDList.Count);
 
-        NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn,currentAuctionBid);
+        NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn, currentAuctionBid);
     }
-
 
     private void OnPlayerBiddedAtAuction(string playerID, int bidAmount)
     {
         photonView.RPC(nameof(SetCurrentAuctionBidRPC), RpcTarget.All, bidAmount);
-        MoveToNextTurn();
+        MoveToNextTurnAllClients();
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        RemovePlayerLocalClient(otherPlayer.UserId);
     }
 
     [PunRPC]
@@ -44,9 +50,15 @@ public class AuctionTurnManager : MonoBehaviourPun
         this.currentAuctionBid = currentAuctionBid;
     }
 
-    public void MoveToNextTurn() 
+    public void MoveToNextTurnAllClients() 
     {
         photonView.RPC(nameof(MoveToNextTurnRPC), RpcTarget.All);
+    }
+
+    public void MoveToNextTurnLocalClient()
+    {
+        auctionTurns.MoveToNextTurn();
+        NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn, currentAuctionBid);
     }
 
     [PunRPC]
@@ -64,17 +76,30 @@ public class AuctionTurnManager : MonoBehaviourPun
     [PunRPC]
     private void RemovePlayerRPC(string playerID)
     {
+        if(auctionTurns.CurrentTurn == playerID)
+            MoveToNextTurnLocalClient();
+
         auctionTurns.RemoveTurn(playerID);
 
         if (auctionTurns.OneRemainingTurn)
         {
-            PlayerWonAuctionEvent?.Invoke(auctionTurns.GetFirst,currentAuctionBid);
-        }
-        else
-        {
-            MoveToNextTurn();
+            PlayerWonAuctionEvent?.Invoke(auctionTurns.GetFirst,currentAuctionBid,auctionType);
         }
     }
+
+    private void RemovePlayerLocalClient(string playerID)
+    {
+        if (auctionTurns.CurrentTurn == playerID)
+            MoveToNextTurnLocalClient();
+
+        auctionTurns.RemoveTurn(playerID);
+
+        if (auctionTurns.OneRemainingTurn)
+        {
+            PlayerWonAuctionEvent?.Invoke(auctionTurns.GetFirst, currentAuctionBid, auctionType);
+        }
+    }
+
     private void OnDestroy()
     {
         BTN_AuctionBid.PlayerBiddedAtAuction -= OnPlayerBiddedAtAuction;

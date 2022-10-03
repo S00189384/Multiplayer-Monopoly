@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 //Class which spawns displays to notify the player on what has happened throughout an auction.
 //"Player x has folded", "player x has bid y amount" etc.
 
-public class UI_AuctionReporter : MonoBehaviourPun
+public class UI_AuctionReporter : MonoBehaviourPunCallbacks
 {
     //To ensure that the player won auction display remains at the top of the list, hold a reference to it so we can set to to be the last sibling later.
     private Transform spawnedPlayerWonDisplayTransform;
@@ -39,6 +39,11 @@ public class UI_AuctionReporter : MonoBehaviourPun
         AuctionTurnManager.PlayerWonAuctionEvent -= ReportPlayerWin;
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        ReportPlayerDisconnect(otherPlayer.UserId);
+    }
+
     //Fold.
     private void ReportPlayerFold(string playerIDThatFolded)
     {
@@ -57,6 +62,16 @@ public class UI_AuctionReporter : MonoBehaviourPun
         }
     }
 
+    private void ReportPlayerDisconnect(string playerIDThatDisconnected)
+    {
+        string playerNameThatDisconnected = GameManager.Instance.GetPlayerIdentityDisplay(playerIDThatDisconnected);
+
+        UI_AuctionEventDisplay spawnedEventDisplay = ReportAuctionEvent($"{playerNameThatDisconnected} disconnected.", Color.red);
+        if (spawnedPlayerWonDisplayTransform)
+        {
+            spawnedPlayerWonDisplayTransform.SetAsLastSibling();
+        }
+    }
 
     private void ReportPlayerBid(string playerIDThatBidded, int bidAmount)
     {
@@ -71,7 +86,7 @@ public class UI_AuctionReporter : MonoBehaviourPun
     }
 
     //Win.
-    private void ReportPlayerWin(string playerIDThatWon,int finalBid)
+    private void ReportPlayerWin(string playerIDThatWon,int finalBid,AuctionType auctionType)
     {
         string playerNameThatWon = GameManager.Instance.GetPlayerIdentityDisplay(playerIDThatWon);
         spawnedPlayerWonDisplayTransform = ReportAuctionEvent($"{playerNameThatWon} won the auction.", Color.green).transform;

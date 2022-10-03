@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UI_AuctionTurnDisplayManager : MonoBehaviourPun
+public class UI_AuctionTurnDisplayManager : MonoBehaviourPunCallbacks
 {
     private bool LocalPlayerHasFolded;
 
@@ -26,7 +26,12 @@ public class UI_AuctionTurnDisplayManager : MonoBehaviourPun
         BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent += OnPlayerFoldedFromAuction;
     }
 
-    private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid)
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        SpawnedPlayerTurnIconsDictionary[otherPlayer.UserId].ChangeToFolded();
+    }
+
+    private void OnPlayerWonAuction(string playerIDThatWonAuction,int finalBid,AuctionType auctionType)
     {
         if(PhotonNetwork.LocalPlayer.UserId == playerIDThatWonAuction)
         {
@@ -51,13 +56,6 @@ public class UI_AuctionTurnDisplayManager : MonoBehaviourPun
         SpawnedPlayerTurnIconsDictionary[playerIDThatFolded].ChangeToFolded();
     }
 
-    private void OnDestroy()
-    {
-        PhotonNetwork.RemoveCallbackTarget(this);
-        AuctionTurnManager.NewPlayerAuctionTurnEvent -= OnNewPlayerAuctionTurn;
-        AuctionTurnManager.PlayerWonAuctionEvent -= OnPlayerWonAuction;
-        BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent -= OnPlayerFoldedFromAuction;
-    }
 
     private void OnNewPlayerAuctionTurn(string newPlayerTurn,int currentBid)
     {
@@ -96,7 +94,14 @@ public class UI_AuctionTurnDisplayManager : MonoBehaviourPun
     {
         for (int i = 0; i < activePlayerIDs.Count; i++)
         {
-            SpawnPlayerIcon(activePlayerIDs[i],null);
+            SpawnPlayerIcon(activePlayerIDs[i],GameManager.Instance.GetPlayerSprite(activePlayerIDs[i]));
         }
+    }
+    private void OnDestroy()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+        AuctionTurnManager.NewPlayerAuctionTurnEvent -= OnNewPlayerAuctionTurn;
+        AuctionTurnManager.PlayerWonAuctionEvent -= OnPlayerWonAuction;
+        BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent -= OnPlayerFoldedFromAuction;
     }
 }

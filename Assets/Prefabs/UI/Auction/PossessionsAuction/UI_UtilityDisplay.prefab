@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 5296317192085031131}
   - component: {fileID: 3292736930060627421}
   - component: {fileID: 340650140580935715}
+  - component: {fileID: 7259925630142394837}
   m_Layer: 5
-  m_Name: UI_StationUtilityDisplay
+  m_Name: UI_UtilityDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,6 +78,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7259925630142394837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2511709705335207101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277bc780ff6414f40a44d59d6578cb59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TMP_UtilityName: {fileID: 4956468018671366081}
+  IMG_UtilityImage: {fileID: 2813126226782150889}
 --- !u!1 &2696905498359219228
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +157,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9e47808f13c26b44d8d176b3d478c9c5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a4991b854b8d05a4790f347cecf6bd56, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -217,7 +232,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Shannon Airport
+  m_text: Utility Name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f592137cddf5f6744ad1bd280012b369, type: 2}
   m_sharedMaterial: {fileID: 3223230760533005620, guid: f592137cddf5f6744ad1bd280012b369, type: 2}

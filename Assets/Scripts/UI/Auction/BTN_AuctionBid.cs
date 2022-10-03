@@ -39,7 +39,7 @@ public class BTN_AuctionBid : BTN_Base
         }
     }
 
-    private void OnPlayerWonAuction(string playerID,int finalBid)
+    private void OnPlayerWonAuction(string playerID,int finalBid,AuctionType auctionType)
     {
         SetButtonInteractable(false);
     }
@@ -54,20 +54,12 @@ public class BTN_AuctionBid : BTN_Base
         if (newPlayerTurn == PhotonNetwork.LocalPlayer.UserId)
         {
             if(playerMoneyAccount.Balance > currentBid)
-            {
-                print("My turn and can afford the bid of " + currentBid + "with my balance of " + playerMoneyAccount.Balance);
                 SetButtonInteractable(true);
-            }
             else
-            {
                 SetButtonInteractable(false);
-                SetButtonText("Can't bet more");
-            }
         }
         else
-        {
             SetButtonInteractable(false);
-        }
     }
 
     public void Bid()
