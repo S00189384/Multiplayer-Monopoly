@@ -145,8 +145,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (spawnedPlayerList.Count == PhotonNetwork.PlayerList.Length)
             OnRecievingAllSpawnedPlayers();
-
-        //print($"Detected spawned player! {spawnedPlayer}  {viewID}");
     }
     private void OnRecievingAllSpawnedPlayers()
     {
@@ -206,31 +204,3 @@ public class GameManager : MonoBehaviourPunCallbacks
         Bank.PlayerDeclaredBankruptDueToPlayerPaymentEvent -= OnPlayerDeclaredBankruptDueToPlayer;
     }
 }
-
-
-
-
-
-//OLD AWAKE
-
-//player = PhotonNetwork.Instantiate($"Pieces/PlayerPiece", Vector3.zero, Quaternion.identity);
-//player.name = PhotonNetwork.LocalPlayer.NickName;
-
-//playerNameList.Add(PhotonNetwork.LocalPlayer.NickName);
-
-
-//for (int i = 0; i < GameDataSlinger.NUM_PLAYERS; i++)
-//{
-//    string playerName = $"Player {i + 1}";
-//    PlayerData playerData = new PlayerData(playerName);
-//    playerNameList.Add(playerName);
-//    PlayerIDs.Add(playerData.ID);
-//    PlayerNameDict.Add(playerData.ID, playerName);
-//    GameObject spawnedPlayer = PhotonNetwork.Instantiate($"Pieces/{playerName}", Vector3.zero, Quaternion.identity);
-//    Player_Piece spawnedPiece = Instantiate(Resources.Load<Player_Piece>($"Pieces/{playerName}"), Vector3.zero, Quaternion.identity);
-//    spawnedPiece.RecievePlayerData(playerData);
-//    spawnedPiece.GetComponent<PlayerMoneyAccount>().PlayerID = playerData.ID;
-//    spawnedPlayerDict.Add(playerData.ID, spawnedPiece);
-//}
-
-//NumActivePlayers = PlayerIDs.Count;

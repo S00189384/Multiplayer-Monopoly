@@ -28,7 +28,7 @@ public class UI_BankrupcyConfirmation : MonoBehaviour
         mainUIObject.SetActive(true);
 
         UI_BankrupcyConfirmationPrompt spawnedPrompt = Instantiate(confirmationPanelPrefab, confirmpromptSpawnTransform.position, Quaternion.identity, this.transform);
-        spawnedPrompt.UpdateDisplay(OnNoButtonClickedOnPanel, OnYesButtonClickedOnPanel, true);
+        spawnedPrompt.UpdateDisplay(OnNoButtonClickedOnPanel, OnYesButtonClickedOnPanel);
         GO_spawnedPrompt = spawnedPrompt.gameObject;
         GO_spawnedPrompt.transform.localEulerAngles = Vector3.zero;
 

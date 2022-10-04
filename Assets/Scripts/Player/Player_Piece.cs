@@ -8,6 +8,7 @@ public class Player_Piece : MonoBehaviourPun, IPunObservable
 {
     public int TileIndex = GameDataSlinger.PLAYER_START_TILE_INDEX;
     public Player Player;
+    public Material localPlayerMaterial;
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -21,7 +22,13 @@ public class Player_Piece : MonoBehaviourPun, IPunObservable
         }
     }
 
-    public void RecievePlayerData(Player playerData) => Player = playerData;
+    public void RecievePlayerData(Player playerData)
+    {
+        Player = playerData;
+
+        if(Player.UserId == PhotonNetwork.LocalPlayer.UserId)
+            GetComponent<MeshRenderer>().material = localPlayerMaterial;
+    }
 
     public void SetTileIndex(int index)
     {

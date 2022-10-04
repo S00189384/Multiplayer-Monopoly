@@ -46,8 +46,11 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
     }
     private void OnPlayerDeclaredBankrupt(string playerID)
     {
+        print("entered");
+
         if (playerTurnManager.CurrentTurn == playerID)
         {
+            print("ending player turn due to bankrupcy");
             EndPlayerTurn();
         }
 
@@ -71,14 +74,14 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void MoveToNextTurn()
+    private void MoveToNextTurnLocalClient()
     {
         playerTurnManager.MoveToNextTurn();
     }
 
     public void EndPlayerTurn()
     {
-        photonView.RPC(nameof(MoveToNextTurn), RpcTarget.All);
+        photonView.RPC(nameof(MoveToNextTurnLocalClient), RpcTarget.All);
 
         PlayerFinishedTurnEvent?.Invoke();
 
@@ -88,10 +91,28 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         if (playerTurnManager.CurrentTurn == otherPlayer.UserId)
-            EndPlayerTurn();
+        {
+            MoveToNextTurnLocalClient();
+            if (PhotonNetwork.LocalPlayer.IsMasterClient)
+                TriggerNewTurnEvent();
+        }
 
         if (playerTurnManager.ContainsTurn(otherPlayer.UserId))
+        {
             playerTurnManager.RemoveTurn(otherPlayer.UserId);
+        }
+
+
+        //print("player disconnected. moving to next turn");
+        //if (playerTurnManager.CurrentTurn == otherPlayer.UserId)
+        //{
+        //    EndPlayerTurn();
+        //}
+
+        //if (playerTurnManager.ContainsTurn(otherPlayer.UserId))
+        //{
+        //    playerTurnManager.RemoveTurn(otherPlayer.UserId);
+        //}
     }
 
     [PunRPC] 

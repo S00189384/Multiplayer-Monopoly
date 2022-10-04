@@ -12,8 +12,9 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
     [Header("Current rent")]
     [SerializeField] public int CurrentRentRequired;
 
-    public override bool CanBeMortgagedd => base.CanBeMortgagedd && propertyBuildingConstructor.PropertyContainsAnyBuildings;
+   // public override bool CanBeMortgaged => base.CanBeMortgaged && propertyBuildingConstructor.PropertyContainsAnyBuildings;
     public int NumConstructedBuildings { get { return propertyBuildingConstructor.NumConstructedBuildings;} }
+    public bool HasConstructedBuildings { get { return propertyBuildingConstructor.PropertyContainsAnyBuildings; } }
     public bool CanBuildHouse { get { return propertyBuildingConstructor.NumHousesBuilt < GameDataSlinger.NUM_MAX_HOUSES_PER_PROPERTY; } }
     public bool CanBuildHotel { get { return propertyBuildingConstructor.NumHousesBuilt == GameDataSlinger.NUM_MAX_HOUSES_PER_PROPERTY; } }
     public bool HotelBuilt { get { return propertyBuildingConstructor.HotelOnProperty; } }
@@ -82,7 +83,7 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
     }
     public void SellHouse()
     {
-        propertyBuildingConstructor.RemoveHouse();
+        propertyBuildingConstructor.RemoveAHouse();
         Bank.Instance.AddMoneyToAccount(OwnerID, propertyData.HouseSellValue);
         SoldHouseEvent?.Invoke(this);
 
@@ -98,6 +99,11 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
         SoldHotelEvent?.Invoke(this);
 
         CurrentRentRequired = propertyData.RentCostWithHouses[propertyBuildingConstructor.NumHousesBuilt - 1];
+    }
+
+    public void DestroyBuildings()
+    {
+        propertyBuildingConstructor.DestroyAllBuildings();
     }
 
     public void ProcessPlayer(string playerID)

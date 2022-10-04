@@ -15,7 +15,7 @@ public abstract class TileInstance_Purchasable : TileInstance
     public string OwnerID;
     public bool IsMortgaged;
 
-    public virtual bool CanBeMortgagedd { get { return IsOwned; } }
+    public virtual bool CanBeMortgaged { get { return IsOwned; } }
     public bool IsOwned { get { return OwnerID != string.Empty && OwnerID != null; } }
     protected bool PlayerLandedIsOwner(string playerIDLanded) => playerIDLanded == OwnerID;
 
@@ -70,7 +70,6 @@ public abstract class TileInstance_Purchasable : TileInstance
             gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.mortgageableLayerName);
 
         OwnerID = playerID;
-        print("gave ownership");
         NewOwnerEvent?.Invoke(OwnerID);
     }
 

@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TileIndex: 0
+  localPlayerMaterial: {fileID: 2100000, guid: c10e0a4a6639d2042b721f699d802287, type: 2}
 --- !u!114 &415024129981399708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,7 +165,6 @@ MonoBehaviour:
   ownedPropertiesList: []
   ownedStationsList: []
   ownedUtilitiesList: []
-  ownedTilesPhotonIDList: 
   AllOwnedPropertiesTypeList: []
   propertyTypeOwnedCountDictionary:
     keys: []

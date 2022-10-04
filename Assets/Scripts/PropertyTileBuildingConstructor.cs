@@ -72,13 +72,13 @@ public class PropertyTileBuildingConstructor : MonoBehaviourPun
     }
     #endregion
     #region House Removing
-    public void RemoveHouse()
+    public void RemoveAHouse()
     {
         int photonViewIDOfHouse = spawnedHousesPhotonIDList[NumHousesBuilt - 1];
-        photonView.RPC(nameof(RemoveHouseRPC), RpcTarget.All, photonViewIDOfHouse);
+        photonView.RPC(nameof(RemoveAHouseRPC), RpcTarget.All, photonViewIDOfHouse);
     }
     [PunRPC]
-    public void RemoveHouseRPC(int photonViewIDOfHouse)
+    public void RemoveAHouseRPC(int photonViewIDOfHouse)
     {
         PlayerRemovedHouseEvent?.Invoke(ownerID, photonViewIDOfHouse);
         Destroy(PhotonNetwork.GetPhotonView(photonViewIDOfHouse).gameObject);
@@ -112,4 +112,22 @@ public class PropertyTileBuildingConstructor : MonoBehaviourPun
         spawnedHotelPhotonID = -1;
     }
     #endregion
+
+    public void DestroyAllBuildings()
+    {
+        if (HouseOnProperty)
+            DestroyAllHouses();
+
+        if (HotelOnProperty)
+            RemoveHotelRPC(spawnedHotelPhotonID);
+    }
+
+    private void DestroyAllHouses()
+    {
+        for (int i = 0; i < NumHousesBuilt; i++)
+        {
+            Destroy(PhotonNetwork.GetPhotonView(spawnedHousesPhotonIDList[i]).gameObject);
+        }
+        spawnedHousesPhotonIDList.Clear();
+    }
 }

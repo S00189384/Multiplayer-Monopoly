@@ -250,8 +250,11 @@ public class TileOwnershipManager : MonoBehaviourPunCallbacks
             {
                 var property = ownedTileTrackerOfGiver.ownedPropertiesList[i];
                 ProcessPlayerPropertyRemoval(playerID, property);
-                if (unmortgageTile)
+                if (unmortgageTile && property.IsMortgaged)
                     property.UnmortgageTileOnTileReset();
+
+                if (property.HasConstructedBuildings)
+                    property.DestroyBuildings();
             }
         }
         if (ownedTileTrackerOfGiver.OwnsAStation)
@@ -260,7 +263,7 @@ public class TileOwnershipManager : MonoBehaviourPunCallbacks
             {
                 var station = ownedTileTrackerOfGiver.ownedStationsList[i];
                 ProcessPlayerStationRemoval(playerID, station);
-                if (unmortgageTile)
+                if (unmortgageTile && station.IsMortgaged)
                     station.UnmortgageTileOnTileReset();
             }
         }
@@ -270,7 +273,7 @@ public class TileOwnershipManager : MonoBehaviourPunCallbacks
             {
                 var utility = ownedTileTrackerOfGiver.ownedUtilitiesList[i];
                 ProcessPlayerUtilityRemoval(playerID, utility);
-                if (unmortgageTile)
+                if (unmortgageTile && utility.IsMortgaged)
                     utility.UnmortgageTileOnTileReset();
             }
         }

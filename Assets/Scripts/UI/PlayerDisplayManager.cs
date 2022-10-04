@@ -1,10 +1,8 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 
 //Changed script execution order to fix the issue that new turn event would fire and the player displays had not been spawned yet to handle the new turn.
@@ -26,6 +24,12 @@ public class PlayerDisplayManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         PhotonNetwork.AddCallbackTarget(this);
         Bank.PlayerDeclaredBankruptDueToBankPaymentEvent += OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToPlayerPaymentEvent += OnPlayerDelcaredBankruptDueToPlayer;
+    }
+
+    private void OnPlayerDelcaredBankruptDueToPlayer(string playerIDBankrupt, string playerIDCausedBankrupcy)
+    {
+        spawnedPlayerDisplayDict[playerIDBankrupt].ChangeDisplayToBankrupt(RpcTarget.All);
     }
 
     private void OnPlayerDeclaredBankrupcy(string playerID)
@@ -51,6 +55,7 @@ public class PlayerDisplayManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         spawnedPlayerDisplayDict[otherPlayer.UserId].ChangeDisplayToDisconnected();
+        spawnedPlayerDisplayDict.Remove(otherPlayer.UserId);
     }
 
     public void SpawnPlayerDisplays() //Master client only spawns displays.
@@ -101,5 +106,6 @@ public class PlayerDisplayManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         PhotonNetwork.RemoveCallbackTarget(this);
         Bank.PlayerDeclaredBankruptDueToBankPaymentEvent -= OnPlayerDeclaredBankrupcy;
+        Bank.PlayerDeclaredBankruptDueToPlayerPaymentEvent -= OnPlayerDelcaredBankruptDueToPlayer;
     }
 }

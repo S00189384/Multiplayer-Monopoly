@@ -89,15 +89,14 @@ public class Bank : MonoBehaviourPun
 
         if (bankrupcyBetweenPlayersDictionary.ContainsKey(playerIDToBankrupt))
         {
-            string playerNameCausedBankrupcy = bankrupcyBetweenPlayersDictionary[playerIDToBankrupt];
+            string playerNameCausedBankrupcy = GameManager.Instance.GetPlayerNicknameFromID(bankrupcyBetweenPlayersDictionary[playerIDToBankrupt]);
 
             UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback($"{playerNameBankrupt} declared bankrupcy caused by {playerNameCausedBankrupcy}!",
                 callback: () =>
                 {
                     PlayerDeclaredBankruptDueToPlayerPaymentEvent?.Invoke(playerIDToBankrupt,bankrupcyBetweenPlayersDictionary[playerIDToBankrupt]);
+                    bankrupcyBetweenPlayersDictionary.Remove(playerIDToBankrupt);
                 });
-
-            bankrupcyBetweenPlayersDictionary.Remove(playerIDToBankrupt);
         }
         else
         {
