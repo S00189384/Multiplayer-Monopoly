@@ -146,19 +146,14 @@ public class Bank : MonoBehaviourPun
 
     public void MakePlayerPaymentExchange(PlayerMoneyAccount playerFrom,PlayerMoneyAccount playerTo,int amount)
     {
-        if (playerFrom.WouldGoBankrupt(amount))
-        {
-            print($"added to bankrupt between players dict : {GameManager.Instance.GetPlayerNicknameFromID(playerFrom.PlayerID)} bankrupted by {GameManager.Instance.GetPlayerNicknameFromID(playerTo.PlayerID)}");
+        if (playerFrom.WouldGoBankrupt(amount))   
             bankrupcyBetweenPlayersDictionary.Add(playerFrom.PlayerID, playerTo.PlayerID);
-        }
 
         playerFrom.SubtractFromBalance(amount);
         playerTo.AddToBalance(amount);
 
         PlayerPaymentExchange paymentExchange = new PlayerPaymentExchange(amount, playerFrom, playerTo);
         PlayerPaymentExchangeEvent?.Invoke(paymentExchange);
-
-        print($"Player payment exchange of ${amount} made between {GameManager.Instance.GetPlayerNicknameFromID(playerFrom.PlayerID)} and {GameManager.Instance.GetPlayerNicknameFromID(playerTo.PlayerID)}.");
     }
 
     private void OnDestroy()

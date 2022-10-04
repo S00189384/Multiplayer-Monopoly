@@ -46,13 +46,8 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
     }
     private void OnPlayerDeclaredBankrupt(string playerID)
     {
-        print("entered");
-
         if (playerTurnManager.CurrentTurn == playerID)
-        {
-            print("ending player turn due to bankrupcy");
             EndPlayerTurn();
-        }
 
         playerTurnManager.RemoveTurn(playerID);
         photonView.RPC(nameof(RemoveTurnRemoteClients), RpcTarget.Others, playerID);

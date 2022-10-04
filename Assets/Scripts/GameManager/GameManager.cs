@@ -78,32 +78,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         ActivePlayersIDList.Remove(playerID);
     }
 
-    private void Update()
-    {
-        if (photonView.IsMine)
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                TileOwnershipManager.Instance.TransferAllPlayerOwnedTilesToAnotherPlayer(PhotonNetwork.LocalPlayer.UserId, ActivePlayersIDList[1]);
-            }
-        }
-    }
+    //private void Update()
+    //{
+    //    if (photonView.IsMine)
+    //    {
+    //        if (Input.GetKeyDown(KeyCode.A))
+    //        {
+    //            TileOwnershipManager.Instance.TransferAllPlayerOwnedTilesToAnotherPlayer(PhotonNetwork.LocalPlayer.UserId, ActivePlayersIDList[1]);
+    //        }
+    //    }
+    //}
 
     private void OnOneRemainingPlayerLeftActiveInGame(string playerIDThatWonGame, List<string> remainingPlayerIDList)
     {
-        //RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-        //PhotonNetwork.RaiseEvent(EventCodes.PlayerWonGameEvent, playerIDThatWonGame, raiseEventOptions, SendOptions.SendReliable);
-
-        print("Game manager reacting to player winning!");
-
-        //string remainingPlayerNamesString = string.Empty;
-        //for (int i = 0; i < remainingPlayerIDList.Count; i++)
-        //{
-        //    remainingPlayerNamesString += GetPlayerNicknameFromID(remainingPlayerIDList[i]) + " ";
-        //}
-
-        //print($"{GetPlayerNicknameFromID(playerIDThatWonGame)} won game. Remaining players: {remainingPlayerNamesString}");
-
         PlayerWonGameEvent?.Invoke(playerIDThatWonGame, remainingPlayerIDList);
     }
 

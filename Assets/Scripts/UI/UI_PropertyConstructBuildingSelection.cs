@@ -81,7 +81,6 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
             //Check if any prop is mortgaged for this set.
             if(propertyBuildingSet.AnyPropertyIsMortgaged)
             {
-                print("At least one property is mortgaged. Ignoring this colour set");
                 continue;
             }
 
@@ -250,6 +249,8 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
     }
 }
 
+//Created when player owns all of a property colour set.
+//Allows UI to keep track of whether the player can mortgage or sell / construct buildings on property.
 [Serializable]
 public class PropertyBuildingSetTracker
 {
@@ -267,6 +268,9 @@ public class PropertyBuildingSetTracker
     {
         this.propertyColour = propertyColour;
         this.propertyList = propertyList;
+
+        NumMortgagedProperties = propertyList.Count(prop => prop.IsMortgaged);
+        MaxNumConstructedBuildingsOfAnyProperty = propertyList.Max(prop => prop.NumConstructedBuildings);
 
         propertyList.ForEach(prop => 
         { 
@@ -298,7 +302,7 @@ public class PropertyBuildingSetTracker
     public bool CanConstructOnProperty(TileInstance_Property propertyInstance)
     {
         // Can construct a house or hotel on property if hotel isn't built
-        // num buildings on property is 0 or all properties have the same number of constructed buildings.
+        // Num buildings on property is 0 or all properties have the same number of constructed buildings.
         return (propertyInstance.NumConstructedBuildings <= 0 || propertyInstance.NumConstructedBuildings < MaxNumConstructedBuildingsOfAnyProperty || AllPropertiesHaveSameNumberOfConstructedBuildings) && !propertyInstance.HotelBuilt && !AnyPropertyIsMortgaged;
     }
 

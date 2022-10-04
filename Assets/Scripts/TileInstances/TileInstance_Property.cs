@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using UnityEngine;
 
@@ -71,6 +72,7 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
         BuiltHouseEvent?.Invoke(this);
 
         CurrentRentRequired = propertyData.RentCostWithHouses[propertyBuildingConstructor.NumHousesBuilt - 1];
+        photonView.RPC(nameof(UpdateRentCostOtherClients), RpcTarget.Others, CurrentRentRequired);
     }
     public void BuildHotel()
     {
@@ -80,6 +82,7 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
         BuiltHotelEvent?.Invoke(this);
 
         CurrentRentRequired = propertyData.RentCostWithHotel;
+        photonView.RPC(nameof(UpdateRentCostOtherClients), RpcTarget.Others, CurrentRentRequired);
     }
     public void SellHouse()
     {
@@ -91,6 +94,8 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
             CurrentRentRequired = propertyData.RentCostWithHouses[propertyBuildingConstructor.NumHousesBuilt - 1];
         else
             CurrentRentRequired = propertyData.RentDefaultCost;
+
+        photonView.RPC(nameof(UpdateRentCostOtherClients), RpcTarget.Others, CurrentRentRequired);
     }
     public void SellHotel()
     {
@@ -99,11 +104,18 @@ public class TileInstance_Property : TileInstance_Purchasable, iTileDataRecievab
         SoldHotelEvent?.Invoke(this);
 
         CurrentRentRequired = propertyData.RentCostWithHouses[propertyBuildingConstructor.NumHousesBuilt - 1];
+        photonView.RPC(nameof(UpdateRentCostOtherClients), RpcTarget.Others, CurrentRentRequired);
     }
 
     public void DestroyBuildings()
     {
         propertyBuildingConstructor.DestroyAllBuildings();
+    }
+
+    [PunRPC]
+    private void UpdateRentCostOtherClients(int rentCost)
+    {
+        CurrentRentRequired = rentCost;
     }
 
     public void ProcessPlayer(string playerID)
