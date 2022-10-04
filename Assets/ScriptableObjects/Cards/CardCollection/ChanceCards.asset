@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ChanceCards
   m_EditorClassIdentifier: 
   cardDataList:
+  - {fileID: 11400000, guid: 380eb99934eed0040b75e50a5a352365, type: 2}
   - {fileID: 11400000, guid: beaf816b337f9ee4a84e3a34bbc9c9d5, type: 2}
   - {fileID: 11400000, guid: 8f5bdcd259f1fc54dba9e4da083e76a6, type: 2}
   - {fileID: 11400000, guid: 50d7fc5cd219f024e9065c345a64ff6c, type: 2}

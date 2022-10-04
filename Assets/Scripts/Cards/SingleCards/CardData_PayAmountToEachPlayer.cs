@@ -15,7 +15,7 @@ public class CardData_PayAmountToEachPlayer : CardData
         //Make payment between players.
         for (int i = 0; i < playerIDsToPayMoneyTo.Count; i++)
         {
-            Bank.Instance.MakePlayerPaymentExchangeRPC(playerID, playerIDsToPayMoneyTo[i], AmountToPayEachPlayer, RpcTarget.All);
+            Bank.Instance.MakePlayerPaymentExchange(playerID, playerIDsToPayMoneyTo[i], AmountToPayEachPlayer);
         }
     }
 }

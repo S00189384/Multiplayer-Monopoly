@@ -120,6 +120,6 @@ public class PlayerTurnManager : MonoBehaviourPunCallbacks
     {
         GameManager.AllPlayersSpawnedEvent -= OnAllPlayersSpawned;
         Bank.PlayerDeclaredBankruptDueToBankPaymentEvent -= OnPlayerDeclaredBankrupcy;
-        playerTurnManager.OneTurnRemainingEvent -= OnOnePlayerRemaining;
+        //playerTurnManager.OneTurnRemainingEvent -= OnOnePlayerRemaining;
     }
 }

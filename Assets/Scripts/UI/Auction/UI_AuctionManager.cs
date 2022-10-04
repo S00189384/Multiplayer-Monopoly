@@ -44,7 +44,10 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
 
     private void OnPlayerDeclaredBankruptDueToBankPayment(string playerID)
     {
-        if(TileOwnershipManager.Instance.GetOwnedPlayerTileTracker(playerID).OwnsAPurchasableTile)       
+        OwnedPlayerTileTracker ownedPlayerTileTracker = TileOwnershipManager.Instance.GetOwnedPlayerTileTracker(playerID);
+        PlayerInventory playerInventory = GameManager.Instance.GetPlayerPieceByID(playerID).GetComponent<PlayerInventory>();
+
+        if (ownedPlayerTileTracker.OwnsAPurchasableTile || playerInventory.HasAGetOutOfJailFreeCard)       
             StartPlayerPossessionsAuction(playerID);      
     }
 

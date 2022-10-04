@@ -20,7 +20,7 @@ public class PlayerInventory : MonoBehaviourPun
     //TESTING.
     //private void Update()
     //{
-    //    if(photonView.IsMine && Input.GetKeyDown(KeyCode.Q))
+    //    if (photonView.IsMine && Input.GetKeyDown(KeyCode.Q))
     //    {
     //        ReceiveGetOutOfJailFreeCard();
     //    }

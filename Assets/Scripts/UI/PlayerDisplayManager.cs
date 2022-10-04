@@ -45,7 +45,10 @@ public class PlayerDisplayManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private void OnNewPlayerTurn(string playerID)
     {
         if (previousTurn != string.Empty && previousTurn != null)
-            spawnedPlayerDisplayDict[previousTurn].ChangeOutlineColour(Color.black);
+        {
+            if(spawnedPlayerDisplayDict.ContainsKey(previousTurn))
+                spawnedPlayerDisplayDict[previousTurn].ChangeOutlineColour(Color.black);
+        }
 
         spawnedPlayerDisplayDict[playerID].ChangeOutlineColour(Color.green);
 

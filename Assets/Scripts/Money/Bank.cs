@@ -146,7 +146,7 @@ public class Bank : MonoBehaviourPun
 
     public void MakePlayerPaymentExchange(PlayerMoneyAccount playerFrom,PlayerMoneyAccount playerTo,int amount)
     {
-        if (playerFrom.WouldGoBankrupt(amount))   
+        if (playerFrom.WouldGoBankrupt(amount))
             bankrupcyBetweenPlayersDictionary.Add(playerFrom.PlayerID, playerTo.PlayerID);
 
         playerFrom.SubtractFromBalance(amount);

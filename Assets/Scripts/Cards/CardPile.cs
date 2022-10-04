@@ -22,7 +22,6 @@ public class CardPile : MonoBehaviourPun
             photonView.RPC(nameof(InitialiseCardQueue), RpcTarget.All, seed);
         }
     }
-
     [PunRPC]
     private void InitialiseCardQueue(int seed)
     {

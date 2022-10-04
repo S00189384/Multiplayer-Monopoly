@@ -107,7 +107,6 @@ public class MainMenu : MonoBehaviourPunCallbacks
             if (players[i].IsMasterClient)
                 line += $" (Host)";
 
-            //text += $"{players[i].NickName} \n";
             text += line +  "\n";
         }
 

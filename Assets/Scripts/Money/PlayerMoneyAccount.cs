@@ -38,17 +38,17 @@ public class PlayerMoneyAccount : MonoBehaviourPun
     public event Action<int> BalanceChangedEvent;
 
     //Testing.
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P) && photonView.IsMine)
-        {
-            SetBalance(-2);
-        }
-        if (Input.GetKeyDown(KeyCode.L) && photonView.IsMine)
-        {
-            SetBalance(0);
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.P) && photonView.IsMine)
+    //    {
+    //        SetBalance(-2);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.L) && photonView.IsMine)
+    //    {
+    //        SetBalance(0);
+    //    }
+    //}
 
     public void InitialiseAccount(string playerID)
     {

@@ -1,12 +1,7 @@
-using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-
-//Fix: Move instant does not sync well across clients.
 
 
 public class PieceMover : MonoBehaviour
@@ -173,7 +168,7 @@ public struct PlayerMove
 
     public static event Action<PlayerMove> MovePassedGoEvent;
     
-    //Is there a better way of checking if passed go?
+    //Find better way of checking if passed go?
     private int NumTilesMoved { get { return Math.Abs(((GameDataSlinger.NUM_TILES - TileIndexMovedFrom) + TileIndexMovedTo) - GameDataSlinger.NUM_TILES); } }
     private bool PassedGo { get { return TileIndexMovedFrom > TileIndexMovedTo && TileIndexMovedFrom + NumTilesMoved >= GameDataSlinger.NUM_TILES; } }
 
