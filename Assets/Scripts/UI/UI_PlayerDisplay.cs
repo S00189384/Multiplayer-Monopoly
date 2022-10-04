@@ -11,6 +11,7 @@ public class UI_PlayerDisplay : MonoBehaviourPun
     private Color defaultOutlineColour;
 
     [SerializeField] private TextMeshProUGUI TMP_PlayerName;
+    [SerializeField] private GameObject GO_LocalPlayerNotifier;
     [SerializeField] private TextMeshProUGUI TMP_PlayerBalance;
     [SerializeField] private Image IMG_PlayerIcon;
 
@@ -23,13 +24,16 @@ public class UI_PlayerDisplay : MonoBehaviourPun
         defaultOutlineColour = displayOutline.effectColor;
     }
 
-    public void UpdateDisplay(string playerName,string playerBalance,Sprite playerSprite)
+    public void UpdateDisplay(string playerID,string playerName,string playerBalance,Sprite playerSprite)
     {
         TMP_PlayerName.text = playerName;
         TMP_PlayerBalance.text = playerBalance;
         IMG_PlayerIcon.sprite = playerSprite;
 
         TMP_PlayerNameOutOfGame.text = playerName;
+
+        if (PhotonNetwork.LocalPlayer.UserId == playerID)
+            GO_LocalPlayerNotifier.SetActive(true);
     }
 
     public void ChangeBalance(PlayerMoneyAccount account)

@@ -56390,6 +56390,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerDisplayManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1405614155518059718, guid: 52ba7967cdcbb2443b5ae90a788e50f7, type: 3}
+      propertyPath: m_Spacing
+      value: 32
+      objectReference: {fileID: 0}
     - target: {fileID: 9031640923754391961, guid: 52ba7967cdcbb2443b5ae90a788e50f7, type: 3}
       propertyPath: TMPRO_DEBUG
       value: 
