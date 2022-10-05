@@ -3,32 +3,25 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-//Button for selling houses / hotels on a property.
-//Enables / Disables based on player turn and whether they have property buildings constructed.
+//Button to enable the selection of mortgaging a tile.
 
-public class BTN_Sell : BTN_Base,IOnEventCallback
+public class BTN_TileMortgagerSelection : BTN_Base, IOnEventCallback
 {
-    [SerializeField] private UI_PropertySellBuildingSelection propertySellBuildingSelection;
+    [SerializeField] private UI_TileMortgageSelection uiTileMortgagerSelection;
 
     public override void Awake()
     {
         base.Awake();
-
-        PlayerTurnManager.PlayerFinishedTurnEvent += OnPlayerFinishedTheirTurn;
         PhotonNetwork.AddCallbackTarget(this);
+        PlayerTurnManager.PlayerFinishedTurnEvent += OnPlayerFinishedTheirTurn;
         AddOnClickListener(OnMyButtonClick);
     }
+
     private void Start()
     {
         SetButtonInteractable(false);
     }
 
-    private void OnMyButtonClick()
-    {
-        propertySellBuildingSelection.Initialise();
-    }
-
-    //Turn changing button reaction.
     private void OnPlayerFinishedTheirTurn()
     {
         SetButtonInteractable(false);
@@ -43,6 +36,11 @@ public class BTN_Sell : BTN_Base,IOnEventCallback
             if (playerTurn == PhotonNetwork.LocalPlayer.UserId)
                 SetButtonInteractable(true);
         }
+    }
+
+    private void OnMyButtonClick()
+    {
+        uiTileMortgagerSelection.gameObject.SetActive(true);
     }
 
     private void OnDestroy()

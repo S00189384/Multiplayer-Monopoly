@@ -1,9 +1,7 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Prompt shown to player when landing on an unowned station.
 
 public class UI_LandedOnUnownedStationPrompt : UI_LandedOnUnownedTilePrompt
 {
@@ -37,14 +35,4 @@ public class UI_LandedOnUnownedStationPrompt : UI_LandedOnUnownedTilePrompt
         UI_NotificationManager.Instance.RPC_ShowNotification($"{GameManager.Instance.GetPlayerNicknameFromID(playerIDOfLandedPlayer)} purchased {stationTileLandedOn.tileDataStation.Name} for ${stationTileLandedOn.PurchaseCost}", RpcTarget.All);
         Bank.Instance.ProcessPlayerTilePurchase(playerIDOfLandedPlayer, stationTileLandedOn.photonView.ViewID, stationTileLandedOn.PurchaseCost);
     }
-
-    //public void OnPurchaseTileButtonClicked()
-    //{
-    //    //Don't need to check if they can afford the tile since that was done during the button setup.
-    //    //if moneyAccountOfLandedPlayer.CanAffordPurchase(purchasableTileLandedOn.PurchaseCost)
-    //    UI_NotificationManager.Instance.RPC_ShowNotification($"{GameManager.Instance.GetPlayerNicknameFromID(playerIDOfLandedPlayer)} purchased {stationTileLandedOn.tileDataStation.Name} for ${stationTileLandedOn.PurchaseCost}", RpcTarget.All);
-    //    TileOwnershipManager.Instance.ProcessPlayerStationPurchase(playerIDOfLandedPlayer, stationTileLandedOn);
-
-    //    Destroy(gameObject);
-    //}
 }

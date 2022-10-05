@@ -1,11 +1,10 @@
-using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//UI for a single dice throw.
+//Enabled by dice throw manager.
 //TODO: Remove try catch block when finished.
 
 public class UI_SingleDiceThrowPanel : UI_DiceThrowPanel
@@ -16,15 +15,7 @@ public class UI_SingleDiceThrowPanel : UI_DiceThrowPanel
     public void UpdateDisplay(string playerName, int diceValueToShow)
     {
         TMP_Header.text = $"{playerName} throws a dice";
-        //TMP_DiceThrowValue.text = diceValueToShow.ToString();
 
-        try
-        {
-            IMG_Dice.sprite = diceSideSprites[diceValueToShow - 1];
-        }
-        catch (IndexOutOfRangeException exception)
-        {
-
-        }
+        IMG_Dice.sprite = diceSideSprites[diceValueToShow - 1];
     }
 }

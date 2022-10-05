@@ -1,9 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+//UI for a double dice throw.
+//Player is informed if they rolled a double.
+//Enabled by dice throw manager.
 
 public class UI_DoubleDiceThrowPanel : UI_DiceThrowPanel
 {

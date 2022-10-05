@@ -1,8 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+//Panel that is spawned when its the players turn and they are in jail.
+//Player can pay to leave, try roll a double or use a get out of jail free card if they have any.
 
 public class UI_InJailOptionsPanel : MonoBehaviour
 {

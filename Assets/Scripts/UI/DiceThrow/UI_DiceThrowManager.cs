@@ -1,8 +1,9 @@
 using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//UI for showing showing a single / double dice throw.
+//Enables / disables the dice throw UI - does not spawn them in.
 
 public class UI_DiceThrowManager : MonoBehaviourPun
 {

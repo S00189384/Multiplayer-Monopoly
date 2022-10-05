@@ -2,9 +2,10 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Handles player in jail.
+//When player is in jail this script listens for their turn event and activates jail option UI.
 
 public class UI_JailManager : MonoBehaviour,IOnEventCallback
 {

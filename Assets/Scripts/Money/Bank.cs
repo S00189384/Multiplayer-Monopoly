@@ -44,7 +44,14 @@ public class Bank : MonoBehaviourPun
             PlayerMoneyAccount playerMoneyAccount = GameManager.Instance.GetPlayerPieceByID(playerID).GetComponent<PlayerMoneyAccount>();
             playerMoneyAccount.InitialiseAccount(playerID);
             playerMoneyAccountDictionary.Add(playerID, playerMoneyAccount);
+            playerMoneyAccount.LeftBankruptsyEvent += OnPlayerLeftBankrupcy;
         }
+    }
+
+    private void OnPlayerLeftBankrupcy(PlayerMoneyAccount playerMoneyAccount)
+    {
+        if (bankrupcyBetweenPlayersDictionary.ContainsKey(playerMoneyAccount.PlayerID))
+            bankrupcyBetweenPlayersDictionary.Remove(playerMoneyAccount.PlayerID);
     }
 
     //Tile purchasing.
@@ -133,7 +140,10 @@ public class Bank : MonoBehaviourPun
     public void MakePlayerPaymentExchange(PlayerMoneyAccount playerFrom,PlayerMoneyAccount playerTo,int amount)
     {
         if (playerFrom.WouldGoBankrupt(amount))
-            bankrupcyBetweenPlayersDictionary.Add(playerFrom.PlayerID, playerTo.PlayerID);
+        {
+            if(bankrupcyBetweenPlayersDictionary.ContainsKey(playerFrom.PlayerID) == false)
+                bankrupcyBetweenPlayersDictionary.Add(playerFrom.PlayerID, playerTo.PlayerID);
+        }
 
         playerFrom.SubtractFromBalance(amount);
         playerTo.AddToBalance(amount);
