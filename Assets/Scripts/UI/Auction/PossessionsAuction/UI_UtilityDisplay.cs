@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+//Tile display for a utility that can be shown on the UI. 
+//Used by player possessions auction panel to show any utilities the player owns.
 
 public class UI_UtilityDisplay : MonoBehaviour
 {

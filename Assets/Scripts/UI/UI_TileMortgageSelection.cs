@@ -1,6 +1,4 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +10,6 @@ using UnityEngine.UI;
 
 public class UI_TileMortgageSelection : MonoBehaviour
 {
-    private const string canvasSortingLayerNameDuringSelection = "CanvasDuringMortgageSelection";
-    private const string defaultcanvasSortingLayerName = "Canvas";
-
     [Header("Components")]
     [SerializeField] private Canvas mainCanvas;
     [SerializeField] private CanvasGroup CG_Background;
@@ -139,12 +134,12 @@ public class UI_TileMortgageSelection : MonoBehaviour
     {
         FadeInUI();
         moneyAccountOfLocalPlayer = Bank.Instance.GetLocalPlayerMoneyAccount;
-        mainCanvas.sortingLayerName = canvasSortingLayerNameDuringSelection;
+        mainCanvas.sortingLayerName = CustomLayerMasks.canvasMortgageSelectionLayerName;
     }
 
     private void OnDisable()
     {
-        mainCanvas.sortingLayerName = defaultcanvasSortingLayerName;
+        mainCanvas.sortingLayerName = CustomLayerMasks.canvasDefaultSortingLayerName;
     }
 
     private void FadeInUI()

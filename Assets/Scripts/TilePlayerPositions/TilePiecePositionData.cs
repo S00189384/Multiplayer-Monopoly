@@ -7,6 +7,9 @@ using Photon.Pun;
 //When leaving a tile, the script removes this unavailable position from the queue and adds it to the stack of available positions a player can use to stay in on this tile.
 //The current position for a player to be in on a tile is the first element at the top of the available positions stack.
 
+//TODO:
+//If a player disconnects, the tile position they filled up will remain marked as being unavailable. Not a big deal but should be fixed.
+
 public class TilePiecePositionData : MonoBehaviourPun
 {
     [SerializeField] protected List<Transform> playerMoveToTransforms = new List<Transform>();

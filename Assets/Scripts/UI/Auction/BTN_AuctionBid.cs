@@ -1,13 +1,10 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
-using Photon.Realtime;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-//What if an auction gets triggered and a player has < 0 balance?
-//UI doesn't allow a player to roll dice to move if they are in the red so this shouldn't happen.
+//Button to bid during an auction.
+//Can't bid if your balance is too low.
+//Button is disabled when its not your turn in the auction.
 
 
 public class BTN_AuctionBid : BTN_Base
@@ -17,15 +14,12 @@ public class BTN_AuctionBid : BTN_Base
     public static event Action<string,int> PlayerBiddedAtAuction;
 
     private PlayerMoneyAccount playerMoneyAccount;
-    private bool hasBalanceToBid;
 
     public override void Awake()
     {
         if(GameManager.Instance.LocalPlayerIsAnActivePlayer)
         {
             playerMoneyAccount = Bank.Instance.GetLocalPlayerMoneyAccount;
-            if (playerMoneyAccount.Balance >= 0)
-                hasBalanceToBid = true;
 
             AuctionTurnManager.NewPlayerAuctionTurnEvent += OnNewPlayerAuctionTurn;
             AuctionTurnManager.PlayerWonAuctionEvent += OnPlayerWonAuction;
@@ -64,13 +58,9 @@ public class BTN_AuctionBid : BTN_Base
 
     public void Bid()
     {
-        //Read this eventually.
         int bidAmount = auctionBidSlider.PlayerBid;
         if (bidAmount >= playerMoneyAccount.Balance)
-        {
             SetButtonText("Can't bet more");
-            hasBalanceToBid = false;
-        }
 
         SetButtonInteractable(false);
 

@@ -1,8 +1,9 @@
-﻿using ExitGames.Client.Photon;
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
 using System;
-using System.Collections.Generic;
+
+//Object attached to an auction panel which handles the turns of the current auction.
+//Handles the turns of an auction, the current highest bid and the winner of an auction.
 
 
 public class AuctionTurnManager : MonoBehaviourPunCallbacks
@@ -28,7 +29,6 @@ public class AuctionTurnManager : MonoBehaviourPunCallbacks
 
         auctionTurns = new TurnManager<string>();
         auctionTurns.Initialise(GameManager.Instance.ActivePlayersIDList);
-        print(GameManager.Instance.ActivePlayersIDList.Count);
 
         NewPlayerAuctionTurnEvent?.Invoke(auctionTurns.CurrentTurn, currentAuctionBid);
     }
@@ -36,7 +36,7 @@ public class AuctionTurnManager : MonoBehaviourPunCallbacks
     private void OnPlayerBiddedAtAuction(string playerID, int bidAmount)
     {
         photonView.RPC(nameof(SetCurrentAuctionBidRPC), RpcTarget.All, bidAmount);
-        MoveToNextTurnAllClients();
+        MoveToNextTurnForAllClients();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -50,7 +50,7 @@ public class AuctionTurnManager : MonoBehaviourPunCallbacks
         this.currentAuctionBid = currentAuctionBid;
     }
 
-    public void MoveToNextTurnAllClients() 
+    public void MoveToNextTurnForAllClients() 
     {
         photonView.RPC(nameof(MoveToNextTurnRPC), RpcTarget.All);
     }

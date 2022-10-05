@@ -17,15 +17,6 @@ public class PlayerInventory : MonoBehaviourPun
     public static event Action PlayerUsedGetOutOfJailFreeCard;
     public static event Action PlayerNoLongerOwnsGetOfJailFreeCard;
 
-    //TESTING.
-    //private void Update()
-    //{
-    //    if (photonView.IsMine && Input.GetKeyDown(KeyCode.Q))
-    //    {
-    //        ReceiveGetOutOfJailFreeCard();
-    //    }
-    //}
-
     public void ReceiveGetOutOfJailFreeCard()
     {
         if (HasMaxNumberOfGetOutOfJailFreeCards)

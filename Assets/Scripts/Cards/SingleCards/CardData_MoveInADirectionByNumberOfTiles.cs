@@ -3,7 +3,6 @@
 [CreateAssetMenu(fileName = "MoveInDirection", menuName = "CardData/MoveInADirectionByNumberOfTiles")]
 public class CardData_MoveInADirectionByNumberOfTiles : CardData
 {
-    //This being pos or neg determines the direction.
     public int NumTilesToMove;
     public MoveDirectionType moveDirection;
 

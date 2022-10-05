@@ -25,12 +25,6 @@ public class TileOwnershipManager : MonoBehaviourPunCallbacks
     private Dictionary<Type, Action<string,int>> processTilePurchaseBasedOnTypeDictionary = new Dictionary<Type, Action<string, int>>();
     private Dictionary<Type, Action<string,int>> processTileRemovalBasedOnTypeDictionary = new Dictionary<Type, Action<string, int>>();
 
-
-    public int GetNumberOfPropertyTypeOnBoard(PropertyColourSet propertyColour)
-    {
-        return board.propertyTypeInstanceCountDictionary[propertyColour];
-    }
-
     public bool PlayerOwnsAllOfPropertyType(OwnedPlayerTileTracker playerOwnedTileTracker, PropertyColourSet propertyColour)
     {
         return playerOwnedTileTracker.GetNumberOfOwnedPropertyType(propertyColour) == board.propertyTypeInstanceCountDictionary[propertyColour];

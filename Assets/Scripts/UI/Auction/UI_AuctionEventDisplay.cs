@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+//In an auction panel, there is a section for reporting on auction events such as a player bid, fold, disconnect, win etc.
+//This script is for a notification in that section which is just a message with a background colour.
 
 public class UI_AuctionEventDisplay : MonoBehaviour
 {

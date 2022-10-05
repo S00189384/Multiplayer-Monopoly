@@ -1,18 +1,16 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Needs to recieve player max money in account.
-//Needs to react to players max money in account changing (locally).
-// 
+//Slider for setting the value of an auction bid.
+//Max slider bet amount is the players current balance.
+//Min slider bet amount is the current highest bid + the amount to add after a bid ($1).
+//When a player bids, each players min slider amount is set to that bid.
 
 public class UI_AuctionBidSlider : MonoBehaviourPun
 {
+    [Header("UI Components")]
     [SerializeField] private Slider bidSlider;
     [SerializeField] private TextMeshProUGUI TMP_CurrentBidValue;
     [SerializeField] private TextMeshProUGUI TMP_MaxBidValue; //Players money balance. Can change if they choose to mortgage.

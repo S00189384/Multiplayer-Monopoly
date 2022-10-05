@@ -1,13 +1,9 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
-using Photon.Realtime;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-//If player hasn't folded - its always can be pressed (player can fold at any time).
-//Player folds - disable button for that player, raise network event notifying other players.
+//Button to fold from an auction. 
+//Player can fold even if not their turn. 
+//Disabled if player is bankrupt and only spectating the auction 
 
 public class BTN_FoldFromAuction : BTN_Base
 {

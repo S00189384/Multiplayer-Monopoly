@@ -1,5 +1,4 @@
-﻿using Photon.Pun;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PayAmountToEachPlayer", menuName = "CardData/PayAmountToEachPlayer")]

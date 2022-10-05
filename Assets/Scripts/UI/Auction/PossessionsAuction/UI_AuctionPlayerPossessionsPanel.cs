@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+//Panel that is on screen during an auction for a players possessions. 
+//Shows the players what tiles the player owns and the combined value for all of the tiles.
 
 public class UI_AuctionPlayerPossessionsPanel : MonoBehaviour
 {

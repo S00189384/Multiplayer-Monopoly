@@ -3,6 +3,8 @@ using Photon.Realtime;
 using UnityEngine;
 
 //Player piece script which holds the tile index that the player is currently on.
+//Player piece models aare capsules for now until I create the 3d models for monopoly pieces.
+//As a temporary thing, the players owned piece is set to green for them to show them what their piece is.
 
 public class Player_Piece : MonoBehaviourPun, IPunObservable
 {

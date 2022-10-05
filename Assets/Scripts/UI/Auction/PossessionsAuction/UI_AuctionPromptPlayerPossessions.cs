@@ -1,6 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Prompt that moves on screen which is used during the auction of a players possessions. 
+//If a player is bankrupt / out of the game they are shown a spectating auction text instead of the normal bid slider + buttons.
 
 public class UI_AuctionPromptPlayerPossessions : MonoBehaviour
 {

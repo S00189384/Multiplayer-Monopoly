@@ -21,10 +21,10 @@ public class Bank : MonoBehaviourPun
     public static event Action<PlayerPaymentExchange> PlayerPaymentExchangeEvent;
     public static event Action<string, string, int> RentPaymentMadeBetweenPlayersEvent;
     public static event Action<string> PlayerDeclaredBankruptDueToBankPaymentEvent; //Player is confirmed as bankrupt due to paying the bank a value.
-
     public static event Action<string, string> PlayerDeclaredBankruptDueToPlayerPaymentEvent; //player bankrupt, player caused. Player is confirmed as bankrupt caused by paying another player.
-    public Dictionary<string, string> bankrupcyBetweenPlayersDictionary = new Dictionary<string, string>();//player bankrupt, player caused.
 
+    //When a player is bankrupt because of paying another player, the bank takes note of this and they are added to this dictionary.
+    public Dictionary<string, string> bankrupcyBetweenPlayersDictionary = new Dictionary<string, string>();//player bankrupt, player caused.
     private List<string> playersDeclaredBankruptList = new List<string>();
     public bool PlayerIsBankrupt(string playerID) => playersDeclaredBankruptList.Contains(playerID);
 
@@ -48,11 +48,6 @@ public class Bank : MonoBehaviourPun
     }
 
     //Tile purchasing.
-    public void ProcessPlayerTilePurchase(PlayerMoneyAccount playerMoneyAccount, TileInstance_Purchasable purchasableTile)
-    {
-        RemoveMoneyFromAccount(playerMoneyAccount.PlayerID, purchasableTile.PurchaseCost);
-        TileOwnershipManager.Instance.ProcessPlayerTilePurchaseAllClients(playerMoneyAccount.PlayerID, purchasableTile.photonView.ViewID);
-    }
     public void ProcessPlayerTilePurchase(string playerID, int tilePhotonID,int tilePurchaseCost)
     {
         PlayerMoneyAccount playerMoneyAccount = playerMoneyAccountDictionary[playerID];
@@ -101,11 +96,6 @@ public class Bank : MonoBehaviourPun
         else
         {
             PlayerDeclaredBankruptDueToBankPaymentEvent?.Invoke(playerIDToBankrupt);
-            //UI_NotificationManager.Instance.RPC_ShowNotificationWithLocalCallback($"{playerNameBankrupt} declared bankrupcy caused by a bank payment!",
-            //    callback: () =>
-            //    {
-            //        PlayerDeclaredBankruptDueToBankPaymentEvent?.Invoke(playerIDToBankrupt);
-            //    });
         }          
     }
 
@@ -130,10 +120,6 @@ public class Bank : MonoBehaviourPun
     }
 
     //Payment exchange between players.
-    public void MakePlayerPaymentExchangeRPC(string playerIDFrom, string playerIDTo, int amount,RpcTarget rpcTarget)
-    {
-        photonView.RPC(nameof(MakePlayerPaymentExchange), rpcTarget, playerIDFrom, playerIDTo, amount);
-    }
 
     [PunRPC]
     public void MakePlayerPaymentExchange(string playerIDFrom, string playerIDTo, int amount)

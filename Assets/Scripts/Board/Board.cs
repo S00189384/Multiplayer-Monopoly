@@ -1,15 +1,15 @@
-using Photon.Pun;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+//A board which contains tiles.
+//Tile generator script can spawn in tiles for a board prefab using a button in the inspector and this script receives the tiles that were spawned.
+//When receiving the tiles, this script updates various properties about the board such as the total number of property's of each colour type.
 
 public class Board : MonoBehaviour
 {
     [Header("Tile displays of this board")]
     public List<TileDisplay> boardTiles = new List<TileDisplay>();
-
-    public List<TileInstance_Purchasable> purchasableTilesList = new List<TileInstance_Purchasable>(); //Remove later - prob not needed.
 
     [Header("Property Tile Info")]
     [Tooltip("Holds all the different types of property types that are found on the current board.")]
@@ -18,25 +18,17 @@ public class Board : MonoBehaviour
     [Tooltip("Dictionary for each property colour and the amount of tiles that are of that type on the current board")]
     public PropertyTypeInstanceCountDictionary propertyTypeInstanceCountDictionary = new PropertyTypeInstanceCountDictionary();
 
-    //public Hashtable photonIDPropertyTypeHashTable = new Hashtable();
-
     [Header("Total count of various tile types")]
     public int TotalNumberOfPropertiesOnBoard = 0;
     public int TotalNumberOfUtilitiesOnBoard = 0;
     public int TotalNumberOfStationsOnBoard = 0;
-    //public int PropertyColourTypesCount = 0;
 
     public void RecieveBoardTileData(List<TileDisplay> tiles)
     {
         boardTiles = tiles;
 
         //In case board has been generated twice - clear previous data.
-        propertyColourSetsList.Clear();
-        propertyTypeInstanceCountDictionary.Clear();
-        purchasableTilesList.Clear();
-        TotalNumberOfPropertiesOnBoard = 0;
-        TotalNumberOfUtilitiesOnBoard = 0;
-        TotalNumberOfStationsOnBoard = 0;
+        ResetBoardData();
 
         UpdateBoardProperties();
     }
@@ -55,8 +47,6 @@ public class Board : MonoBehaviour
             boardTiles[i].TryGetComponent(out propertyInstance);
             if (propertyInstance)
             {
-                purchasableTilesList.Add(propertyInstance);
-
                 TotalNumberOfPropertiesOnBoard++;
                 PropertyColourSet propertyColourType = propertyInstance.propertyData.PropertyColourSet;
                 //If this property's colour type has not been registered yet, add it.
@@ -64,7 +54,6 @@ public class Board : MonoBehaviour
                 {
                     propertyColourSetsList.Add(propertyColourType);
                     propertyTypeInstanceCountDictionary.Add(propertyColourType, 0);
-                    //PropertyColourTypesCount++;
                 }
 
                 propertyTypeInstanceCountDictionary[propertyColourType] += 1;
@@ -74,7 +63,6 @@ public class Board : MonoBehaviour
                 boardTiles[i].TryGetComponent(out utilityInstance);
                 if (utilityInstance)
                 {
-                    purchasableTilesList.Add(utilityInstance);
                     TotalNumberOfUtilitiesOnBoard++;
                 }
                 else //Not a utility. Try station
@@ -82,12 +70,20 @@ public class Board : MonoBehaviour
                     boardTiles[i].TryGetComponent(out stationInstance);
                     if (stationInstance)
                     {
-                        purchasableTilesList.Add(stationInstance);
                         TotalNumberOfStationsOnBoard++;
                     }
                 }
             }
         }
+    }
+
+    private void ResetBoardData()
+    {
+        propertyColourSetsList.Clear();
+        propertyTypeInstanceCountDictionary.Clear();
+        TotalNumberOfPropertiesOnBoard = 0;
+        TotalNumberOfUtilitiesOnBoard = 0;
+        TotalNumberOfStationsOnBoard = 0;
     }
 }
 

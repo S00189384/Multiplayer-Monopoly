@@ -1,6 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+//Scriptable object for a row.
+//Each row contains tile data.
 
 [CreateAssetMenu(fileName = "RowData", menuName = "RowData")]
 public class RowData : ScriptableObject

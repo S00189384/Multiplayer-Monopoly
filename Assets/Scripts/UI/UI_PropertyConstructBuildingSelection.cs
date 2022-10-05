@@ -1,6 +1,5 @@
 using Photon.Pun;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -64,7 +63,7 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
         moneyAccountOfLocalPlayer = Bank.Instance.GetLocalPlayerMoneyAccount;
 
         FadeInUI();
-        mainCanvas.sortingLayerName = "CanvasDuringPropertyBuilding";
+        mainCanvas.sortingLayerName = CustomLayerMasks.canvasConstructBuildingSortingLayerName;
     }
 
     private void ReceiveTilesThatPlayerCanConstructPropertyOn()
@@ -91,7 +90,7 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
     private void CheckForMouseOverTile()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, 1 << LayerMask.NameToLayer("CanConstructBuilding")))
+        if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, 1 << LayerMask.NameToLayer(CustomLayerMasks.canConstructBuildingLayerName)))
         {
             MouseIsOverTileThatCanBuildOn = true;
 
@@ -150,13 +149,13 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
             TileInstance_Property propertyInstance = propertyBuildingSetTracker.propertyList[i];
             if (propertyBuildingSetTracker.CanConstructOnProperty(propertyInstance))
             {
-                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName("CanConstructBuilding");
-                propertyInstance.gameObject.layer = LayerMask.NameToLayer("CanConstructBuilding");
+                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName(CustomLayerMasks.canConstructBuildingLayerName);
+                propertyInstance.gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.canConstructBuildingLayerName);
             }
             else
             {
-                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName("Owned");
-                propertyInstance.gameObject.layer = LayerMask.NameToLayer("Owned");
+                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName(CustomLayerMasks.ownedLayerMaskName);
+                propertyInstance.gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.ownedLayerMaskName);
             }
         }
     }
@@ -192,7 +191,6 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
         TMP_ConstructInfo.text = string.Empty;
         TMP_BalanceChange.text = string.Empty;
         UpdatedPropertyConstructionInfoUIText = false;
-        //TMP_BankruptWarning.gameObject.SetActive(false);
     }
     public void OnReturnButtonClicked()
     {
@@ -220,7 +218,6 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
         }
     }
 
-
     private void FadeInUI()
     {
         CG_Background.gameObject.SetActive(true);
@@ -239,7 +236,7 @@ public class UI_PropertyConstructBuildingSelection : MonoBehaviour
 
     private void OnDisable()
     {
-        mainCanvas.sortingLayerName = "Canvas";
+        mainCanvas.sortingLayerName = CustomLayerMasks.canvasDefaultSortingLayerName;
     }
     private void OnDestroy()
     {
@@ -262,7 +259,6 @@ public class PropertyBuildingSetTracker
     public int NumMortgagedProperties;
     public bool AnyPropertyIsMortgaged { get { return NumMortgagedProperties > 0; } }
     public bool AllPropertiesHaveSameNumberOfConstructedBuildings { get { return propertyList.TrueForAll(prop => prop.NumConstructedBuildings == MaxNumConstructedBuildingsOfAnyProperty); } }
-    public bool AllPropertiesHaveNoBuildings { get { return propertyList.TrueForAll(prop => prop.NumConstructedBuildings <= 0); } }
 
     public PropertyBuildingSetTracker(PropertyColourSet propertyColour, List<TileInstance_Property> propertyList)
     {

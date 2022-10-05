@@ -1,10 +1,11 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+//Script which spawns in player icons representing each player in the auction and their turn.
+//It also tells the player whos turn it is in the auction.
 
 public class UI_AuctionTurnDisplayManager : MonoBehaviourPunCallbacks
 {

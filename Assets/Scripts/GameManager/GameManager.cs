@@ -1,14 +1,14 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
-//To do - make prefab for player and change its model by loading it in resources.
+//Game manager holds data about the current players in the game - their ids, names, pieces etc.
+//Game manager makes the master client spawn in each player piece.
+
+//Various things in this script should be moved to seperate scripts eventually.
+//When a player disconnects, their data is not fully taken care of at the moment. This will be worked on in the future.
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -50,11 +50,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public string LocalPlayerNickname => PlayersNameDictionary[PhotonNetwork.LocalPlayer.UserId];
     private bool IsUserIDLocalPlayers(string userID) => userID == PhotonNetwork.LocalPlayer.UserId;
     
-    //Summary: returns a string that reflects how a player's name will be shown to that client.
-    //Returns "You" for a local player - 
-    //Returns player's name for a non local player.
     public string GetPlayerIdentityDisplay(string userID) => IsUserIDLocalPlayers(userID) ? "You" : PlayersNameDictionary[userID];
-    public string GetPlayerIdentityDisplayPronoun(string userID) => IsUserIDLocalPlayers(userID) ? "Your" : PlayersNameDictionary[userID];
 
     public static event Action AllPlayersSpawnedEvent;
     public static event Action<string, List<string>> PlayerWonGameEvent;
@@ -77,17 +73,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         ActivePlayersIDList.Remove(playerID);
     }
-
-    //private void Update()
-    //{
-    //    if (photonView.IsMine)
-    //    {
-    //        if (Input.GetKeyDown(KeyCode.A))
-    //        {
-    //            TileOwnershipManager.Instance.TransferAllPlayerOwnedTilesToAnotherPlayer(PhotonNetwork.LocalPlayer.UserId, ActivePlayersIDList[1]);
-    //        }
-    //    }
-    //}
 
     private void OnOneRemainingPlayerLeftActiveInGame(string playerIDThatWonGame, List<string> remainingPlayerIDList)
     {
@@ -176,9 +161,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void SpawnPlayer()
     {
         spawnedPlayer = PhotonNetwork.Instantiate($"Pieces/PlayerPiece", Vector3.zero, Quaternion.identity);
-
-        //myPlayerPiece = player.GetComponent<Player_Piece>();
-        //PieceMover.Instance.SetPlayerPositionStartOfGame(player);
 
         int viewID = spawnedPlayer.GetComponent<PhotonView>().ViewID;
         photonView.RPC(nameof(OnPlayerSpawned), RpcTarget.All, viewID);

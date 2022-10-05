@@ -1,7 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+//Icon which represents a player in an auction.
+//When its the players turn this icons outline turns to green.
+//When the player folds the icon turns to red.
 
 public class UI_AuctionPlayerTurnIcon : MonoBehaviour
 {

@@ -1,12 +1,12 @@
-using Photon.Pun;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+//Class to spawn a row used by the tile generator script to spawn in tiles for a board prefab.
+
 public static class RowSpawner 
 {
+    //Given row data and a starting transform - spawn in tiles for the row.
     public static List<TileDisplay> SpawnRow(RowData rowData, Transform rowTransform)
     {
         if(rowData == null)
@@ -17,7 +17,7 @@ public static class RowSpawner
 
         if(rowData.tileDataList.Any(tileData => tileData == null))
         {
-            Debug.LogWarning($"{rowData.name} contains missing tile data.");
+            Debug.LogWarning($"{rowData.name} contains a tile which is missing tile data.");
             return null;
         }
 
@@ -28,20 +28,21 @@ public static class RowSpawner
         {
             if(tileData.tilePrefab != null)
             {
+                //Spawn tile.
                 TileDisplay spawnedTile = GameObject.Instantiate(tileData.tilePrefab, startingSpawnPosition, Quaternion.identity);
                 spawnedTilesList.Add(spawnedTile);
 
                 //Update display of tile.
                 spawnedTile.UpdateDisplay(tileData);
 
-                //Give tile instance its tile data.
+                //Can this tile receive data? If so give it its data.
                 iTileDataRecievable tileInstance;
                 spawnedTile.TryGetComponent(out tileInstance);
                 if(tileInstance != null)
                     tileInstance.RecieveTileData(tileData);
 
                 SpriteRenderer sr = spawnedTile.GetComponent<SpriteRenderer>();
-                float tileWidth = sr.bounds.size.x; //This depends on prefab.
+                float tileWidth = sr.bounds.size.x; 
 
                 spawnedTile.transform.SetParent(rowTransform);
                 spawnedTile.transform.rotation = rowTransform.rotation;
@@ -53,20 +54,10 @@ public static class RowSpawner
         return spawnedTilesList;
     }
 
-    //public static TileDisplay SpawnTile(TileData tileData,Vector3 spawnPosition)
-    //{
-    //    TileDisplay spawnedTile = GameObject.Instantiate(tileData.tilePrefab, spawnPosition, Quaternion.identity);
-    //    spawnedTile.UpdateDisplay(tileData);
-
-
-    //    return null;
-    //}
-
+    //Destroy tiles in a row given the row parent.
     public static void ClearRow(Transform rowTransform)
     {
         for (int i = rowTransform.childCount; i > 0; --i)
             GameObject.DestroyImmediate(rowTransform.GetChild(0).gameObject);
     }
 }
-
-

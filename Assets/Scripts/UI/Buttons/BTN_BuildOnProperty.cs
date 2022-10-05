@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 
-//TODO: 
+//Build on property button. Enabled when its the players turn.
+//Enables UI for constructing a building on a property when clicked.
 
 public class BTN_BuildOnProperty : BTN_Base,IOnEventCallback
 {

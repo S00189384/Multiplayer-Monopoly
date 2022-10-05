@@ -1,13 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-//TODO: Better way of giving other classes tile data like piece mover, instance manager etc.
-//Don't allow spawn tiles when the board has already been fully made.
+//Script attached to a board which can spawn in or clear the tiles for this board.
+//Corner tiles are treated seperately to normal tiles in a row for now.
+//When tiles are spawned, other scripts such as tile ownership manager receive the new tile data from the board.
 
-public class TileGenerator : MonoBehaviour
+public class BoardGenerator : MonoBehaviour
 {
     [SerializeField] private BoardData boardData;
     [SerializeField] private Transform[] rowStartingPositions = new Transform[GameDataSlinger.NUM_ROWS];
@@ -15,11 +13,17 @@ public class TileGenerator : MonoBehaviour
     [SerializeField] private List<TileDisplay> cornerTiles = new List<TileDisplay>();
     private List<TileDisplay> spawnedTilesList = new List<TileDisplay>(); 
 
-    public void SpawnTiles()
+    public void SpawnTilesOnBoard()
     {
+        if(spawnedTilesList.Count >= GameDataSlinger.NUM_TILES)
+        {
+            Debug.LogWarning("Did not generate tiles for board as board has already been generated.");
+            return;
+        }
+
         if(boardData == null)
         {
-            Debug.LogWarning("Could not generate tiles - missing board data in inspector.");
+            Debug.LogWarning("Could not generate tiles for board - missing board data in inspector.");
             return;
         }
 
@@ -30,8 +34,6 @@ public class TileGenerator : MonoBehaviour
 
             if(spawnedTilesForThisRow != null)
             {
-                //spawnedTilesForThisRow.Insert(0, cornerTiles[i]);
-
                 cornerTiles[i].GetComponent<TileInstance>().TileBoardIndex = tileIndex;
                 tileIndex++;
 
@@ -47,10 +49,9 @@ public class TileGenerator : MonoBehaviour
             }
         }
 
-        print("Spawned tiles on board");
+        Debug.Log("Tiles for board spawned.");
 
-        //Rework? Maybe have scripts below listen to board generated event.
-
+        //Give scripts the board tile data that was just spawned.
         Board board = GetComponent<Board>();
         board.RecieveBoardTileData(spawnedTilesList);
 
@@ -61,7 +62,7 @@ public class TileGenerator : MonoBehaviour
         tileOwnershipManager.RecieveBoard(board);
     }
 
-    public void ClearTiles()
+    public void ClearTilesOnBoard()
     {
         for (int i = 0; i < GameDataSlinger.NUM_ROWS; i++)
         {
@@ -70,7 +71,7 @@ public class TileGenerator : MonoBehaviour
 
         spawnedTilesList.Clear();
 
-        print("Tiles cleared.");
+        Debug.Log("Board cleared.");
     }
 }
 

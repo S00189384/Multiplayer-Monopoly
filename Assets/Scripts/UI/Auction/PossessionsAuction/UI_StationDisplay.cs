@@ -1,8 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+//Tile display for a station that can be shown on the UI. 
+//Used by player possessions auction panel to show any stations the player owns.
+
 
 public class UI_StationDisplay : MonoBehaviour
 {

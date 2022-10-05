@@ -1,11 +1,9 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 public enum AuctionType { SingleTile, PlayerPossessions }
+
+//Handles the spawning of an auction prompt and it moving on / off the screen. 
 
 public class UI_AuctionManager : MonoBehaviourPunCallbacks
 {
@@ -31,8 +29,6 @@ public class UI_AuctionManager : MonoBehaviourPunCallbacks
     private GameObject spawnedSingleTileAuctionPrompt;
     private int photonIDOfTileForAuction;
     private string playerIDThatBankruptedDueToBank;
-
-
 
     //Start.
     private void Awake()

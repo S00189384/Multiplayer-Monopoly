@@ -1,5 +1,4 @@
 using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -40,7 +39,6 @@ public class UI_PropertySellBuildingSelection : MonoBehaviour
     private void OnAllPlayersSpawned()
     {
         GameManager.Instance.GetLocalPlayerPiece().GetComponent<OwnedPlayerTileTracker>().OwnsAllOfPropertyTypeEvent += OnLocalPlayerNowOwnsAllPropertiesBelongingToSet;
-        //TileOwnershipManager.Instance.GetLocalPlayersOwnedTileTracker.OwnsAllOfPropertyTypeEvent += OnLocalPlayerNowOwnsAllPropertiesBelongingToSet;
     }
 
     private void OnLocalPlayerNowOwnsAllPropertiesBelongingToSet(PropertyColourSet colourSet, List<TileInstance_Property> propertyList)
@@ -63,27 +61,17 @@ public class UI_PropertySellBuildingSelection : MonoBehaviour
         moneyAccountOfLocalPlayer = Bank.Instance.GetLocalPlayerMoneyAccount;
 
         FadeInUI();
-        mainCanvas.sortingLayerName = "CanvasDuringPropertyBuildingSelling";
+        mainCanvas.sortingLayerName = CustomLayerMasks.canvasSellBuildingSortingLayerName;
     }
 
     private void ReceiveTilesThatPlayerCanSellBuildingsOn()
     {
         if (propertyBuildingSetTrackers.Count <= 0)
-        {
             return;
-        }
 
         for (int i = 0; i < propertyBuildingSetTrackers.Count; i++)
         {
             PropertyBuildingSetTracker propertyBuildingSet = propertyBuildingSetTrackers[i];
-
-            ////Check if any prop is mortgaged for this set.
-            //if (propertyBuildingSet.AnyPropertyIsMortgaged)
-            //{
-            //    print("At least one property is mortgaged. Ignoring this colour set");
-            //    continue;
-            //}
-
             CalculateIfCanSellBuildingsOnPropertiesOfAColourSet(propertyBuildingSet);
         }
     }
@@ -91,7 +79,7 @@ public class UI_PropertySellBuildingSelection : MonoBehaviour
     private void CheckForMouseOverTile()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, 1 << LayerMask.NameToLayer("CanSellBuilding")))
+        if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, 1 << LayerMask.NameToLayer(CustomLayerMasks.canSellBuildingLayerName)))
         {
             MouseIsOverTileThatCanSellBuilding = true;
 
@@ -151,13 +139,13 @@ public class UI_PropertySellBuildingSelection : MonoBehaviour
             TileInstance_Property propertyInstance = propertyBuildingSetTracker.propertyList[i];
             if (propertyBuildingSetTracker.CanSellBuildingOnProperty(propertyInstance))
             {
-                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName("CanSellBuilding");
-                propertyInstance.gameObject.layer = LayerMask.NameToLayer("CanSellBuilding");
+                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName(CustomLayerMasks.canSellBuildingLayerName);
+                propertyInstance.gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.canSellBuildingLayerName);
             }
             else
             {
-                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName("Owned");
-                propertyInstance.gameObject.layer = LayerMask.NameToLayer("Owned");
+                propertyInstance.GetComponent<TileDisplay>().ChangeSortingLayerName(CustomLayerMasks.ownedLayerMaskName);
+                propertyInstance.gameObject.layer = LayerMask.NameToLayer(CustomLayerMasks.ownedLayerMaskName);
             }
         }
     }
@@ -193,7 +181,6 @@ public class UI_PropertySellBuildingSelection : MonoBehaviour
         TMP_SellInfo.text = string.Empty;
         TMP_BalanceChange.text = string.Empty;
         UpdatedPropertySellInfoUIText = false;
-        //TMP_BankruptWarning.gameObject.SetActive(false);
     }
     public void OnReturnButtonClicked()
     {
@@ -239,7 +226,7 @@ public class UI_PropertySellBuildingSelection : MonoBehaviour
 
     private void OnDisable()
     {
-        mainCanvas.sortingLayerName = "Canvas";
+        mainCanvas.sortingLayerName = CustomLayerMasks.canvasDefaultSortingLayerName;
     }
     private void OnDestroy()
     {

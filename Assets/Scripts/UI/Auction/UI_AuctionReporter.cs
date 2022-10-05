@@ -1,13 +1,7 @@
-using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-//TODO: Player timed out report?
-//Better way of ensuring that the player won auction stays at the top of the displays?
 
 //Class which spawns displays to notify the player on what has happened throughout an auction.
 //"Player x has folded", "player x has bid y amount" etc.
@@ -32,12 +26,6 @@ public class UI_AuctionReporter : MonoBehaviourPunCallbacks
         AuctionTurnManager.PlayerWonAuctionEvent += ReportPlayerWin;
     }
 
-    private void OnDestroy()
-    {
-        BTN_AuctionBid.PlayerBiddedAtAuction -= ReportPlayerBid;
-        BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent -= ReportPlayerFold;
-        AuctionTurnManager.PlayerWonAuctionEvent -= ReportPlayerWin;
-    }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
@@ -97,5 +85,11 @@ public class UI_AuctionReporter : MonoBehaviourPunCallbacks
         UI_AuctionEventDisplay spawnedEventDisplay = Instantiate(eventDisplayPrefab, contentTransform);
         spawnedEventDisplay.UpdateDisplay(eventColour, eventText);
         return spawnedEventDisplay;
+    }
+    private void OnDestroy()
+    {
+        BTN_AuctionBid.PlayerBiddedAtAuction -= ReportPlayerBid;
+        BTN_FoldFromAuction.PlayerFoldedFromAuctionEvent -= ReportPlayerFold;
+        AuctionTurnManager.PlayerWonAuctionEvent -= ReportPlayerWin;
     }
 }
