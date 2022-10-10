@@ -27,12 +27,12 @@ This is my first project using Photon and Unity where I recreated a multiplayer 
 
 # Gifs showing some of the main features of what I've created so far! 
 
-### Purchasing a tile:
+## Purchasing a tile:
 Landing on an unowned purchasable tile will prompt that player with the option to buy or auction the tile. A notification for all players appears when a major event such as a tile purchase is made.
 
 ![purchase](https://user-images.githubusercontent.com/47157867/194889384-dac787b1-35ec-48da-a381-f919deaa59bf.gif)
 
-### Auctioning a tile:
+## Auctioning a tile:
 Selecting to auction a tile will enable an auction for all active players. Any bankrupt players can only spectate the auction and are not allowed to bid. Players can fold at any time but can only bid when its their turn. 
 
 ![auction](https://user-images.githubusercontent.com/47157867/194889423-4e01b7c7-80fc-492e-be82-fa0914f0ca68.gif)
@@ -47,12 +47,12 @@ Any owned tiles can be mortgaged by the player during their turn. Any owned tile
 
 ![mortgage](https://user-images.githubusercontent.com/47157867/194896935-e3ff62fc-0905-4116-8889-0b1140553976.gif)
 
-## Constructing property buildings
+## Constructing property buildings:
 Houses and hotels can be built on a property if they own all the properties of a colour set and none of the properties are mortgaged. Players are also only allowed to build one building at a time as per the "even build" rule. 
 
 ![building](https://user-images.githubusercontent.com/47157867/194897896-6c8fd840-f4bd-4a26-916e-81f0441f2f93.gif)
 
-## Auctioning a players possessions
+## Auctioning a players possessions:
 Currently, this auction only gets triggered when a player declares bankrupcy that was caused by a bank payment. All of the tiles and any get out of jail free cards that they own are put up for auction for other players to bid on. In the future I hope to implement a queue system for disconnected or bankrupt players so that their possessions are queued up for auction for other players to acquire when they leave the game. 
 
 ![possession auction](https://user-images.githubusercontent.com/47157867/194898257-4fdb7cde-d506-40d2-9ea5-b1c16bfa75d9.gif)
