@@ -32,8 +32,6 @@ public class MainMenu : MonoBehaviourPunCallbacks
         PhotonNetwork.SendRate = 30;
         PhotonNetwork.SerializationRate = 20;
 
-        IF_RoomName.text = "g";
-
         IF_RoomName.characterLimit = GameDataSlinger.ROOM_NAME_CHARACTER_LIMIT;
     }
 
@@ -87,6 +85,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = $"Player {PhotonNetwork.CurrentRoom.PlayerCount}";
 
         BTN_LeaveRoom.gameObject.SetActive(true);
+        IF_RoomName.text = string.Empty;
 
         UpdateListOfPlayersDisplay();
     }

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Dublin Airport
   tilePrefab: {fileID: 3766283061989670944, guid: 67e100642df46fc45b386f13899e98c8, type: 3}
+  tileType: 1
   PurchaseCost: 200
   MortgageValue: 100
   RentDefaultCost: 25

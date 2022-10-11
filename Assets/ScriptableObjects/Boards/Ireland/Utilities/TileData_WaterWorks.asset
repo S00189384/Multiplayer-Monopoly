@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Water Works
   tilePrefab: {fileID: 1324774700218116662, guid: 7399b7cf895a43f49a92eaf89e1681c5, type: 3}
+  tileType: 2
   PurchaseCost: 150
   MortgageValue: 75
   SPR_Utility: {fileID: 21300000, guid: 4d1b2e8d5915cec409c4af1a0d5ab0f7, type: 3}
